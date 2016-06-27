@@ -17,7 +17,7 @@ body {
   width: auto;
 }
 
-.row > div {
+.ingredients {
   background-color: lightblue;
-  background-clip: content-box;
+
 }
