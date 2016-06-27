@@ -19,7 +19,7 @@
 		<link href="css/libs/bootstrap/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
 		<!-- Custom styles for this template -->
-		<!-- <link href="theme.css" rel="stylesheet"> -->
+		<link href="css/recept.css" rel="stylesheet">
 	</head>
 
 	<body role="document">
