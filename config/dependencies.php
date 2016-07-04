@@ -26,7 +26,7 @@ $container['logger'] = function($c) {
 };
 
 // connect to DB
-/*$container['db'] = function ($c) {
+$container['db'] = function ($c) {
 	$db = $c['settings']['db'];
 	$pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
 		$db['user'], $db['pass']);
@@ -34,4 +34,4 @@ $container['logger'] = function($c) {
 	$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 	return $pdo;
 };
-*/
+

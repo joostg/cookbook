@@ -10,7 +10,7 @@
 });*/
 
 $app->get('/recipe', function ($request, $response, $args) {
-	$mapper = new Recipe();
+	$mapper = new Recipe($this->db);
 	$data = $mapper->getRecipes();
 	//$response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets, "router" => $this->router]);
 
