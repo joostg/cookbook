@@ -1,14 +1,19 @@
 <?php
-// Routes
 
-/*$app->get('/[{name}]', function ($request, $response, $args) {
-	// Sample log message
-//	$this->logger->info("Slim-Skeleton '/' route");
+// check if user is logged in, else redirect to login page
+$app->add(function ($request, $response, $next) {
+	if (!isset($_SESSION['user'])) {
+		$uri = $request->getUri()->getPath();
 
-	// Render index view
-	return $this->renderer->render($response, 'index.phtml', $args);
-});*/
+		if ($uri != '/login') {
+			$_SESSION['returnUrl'] = $uri;
 
+			return $response->withHeader('Location', 'login');
+		}
+	}
+
+	return $next($request, $response);
+});
 
 $app->get('/login', function ($request, $response, $args) {
 	return $this->view->render($response, 'login/login.tpl');
@@ -18,7 +23,7 @@ $app->post('/login', function ($request, $response, $args) {
 	$email = $request->getParam('user');
 	$pass = $request->getParam('pass');
 
-	if (!$pass || $email) {
+	if (!$pass || !$email) {
 		return $response->withHeader('Location', 'login');
 	}
 
