@@ -15,16 +15,26 @@ $app->get('/login', function ($request, $response, $args) {
 });
 
 $app->post('/login', function ($request, $response, $args) {
-	$user = $request->getParam('user');
+	$email = $request->getParam('user');
 	$pass = $request->getParam('pass');
 
-	if (!$pass) {
+	if (!$pass || $email) {
 		return $response->withHeader('Location', 'login');
 	}
 
-	$_SESSION['user'] = $user;
-	$_SESSION['pass'] = $pass;
-	return $response->withHeader('Location', 'recipe');
+	$user = new User($this->db);
+	if ($user->authenticate($email, $pass)) {
+		$_SESSION['user'] = $email;
+
+		$uri = '/';
+		if ($_SESSION['returnUrl']) {
+			$uri = $_SESSION['returnUrl'];
+		}
+		// @TODO: fix return url
+		return $response->withHeader('Location', '/recipe');
+	}
+
+	return $response->withHeader('Location', 'login');
 });
 
 $app->get('/logout', function ($request, $response, $args) {
@@ -36,7 +46,6 @@ $app->get('/logout', function ($request, $response, $args) {
 $app->get('/recipe', function ($request, $response, $args) {
 	$mapper = new Recipe($this->db);
 	$data = $mapper->getRecipes();
-	//$response = $this->view->render($response, "tickets.phtml", ["tickets" => $tickets, "router" => $this->router]);
 
 	return $this->view->render($response, 'recipe/browse.tpl', $data);
 });//->setName('profile');
