@@ -35,3 +35,6 @@ $container['db'] = function ($c) {
 	return $pdo;
 };
 
+$container['flash'] = function () {
+	return new \Slim\Flash\Messages();
+};

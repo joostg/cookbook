@@ -11,8 +11,19 @@ require '../config/config.php';
 
 $app = new \Slim\App(["settings" => $config]);
 
+session_name('cookbook');
+session_set_cookie_params(604800);
+session_start();
+
 // load all dependencies
 require '../config/dependencies.php';
+
+if (!isset($_SESSION['user']) && $_SERVER['REQUEST_URI'] != '/login') {
+	header('Location: /login');
+	die();
+}
+
+var_dump($_SESSION);
 
 // add routes
 require '../config/routes.php';

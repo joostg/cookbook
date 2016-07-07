@@ -5,7 +5,7 @@ $sql = "CREATE DATABASE IF NOT EXISTS cookbook
 			COLLATE = 'utf8_bin'
 		";
 
-$sql = "CREATE TABLE IF NOT EXISTS users (
+$sql = "CREATE TABLE users (
 			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 			user VARCHAR(32) NOT NULL,
 			hash VARCHAR(255) NULL
@@ -46,7 +46,5 @@ $sql = "ALTER TABLE recipes_ingredients ADD INDEX recipe_id (recipe_id)";
 $sql = "ALTER TABLE recipes_ingredients ADD INDEX ingredient_id (ingredient_id)";
 $sql = "ALTER TABLE recipes_ingredients ADD INDEX quantity_id (quantity_id)";
 
-$sql = "GRANT ALL PRIVILEGES ON cookbook.* TO 'masterchef'@'localhost'
-    	IDENTIFIED BY 'letmecook'
-    	WITH GRANT OPTION;
+$sql = "GRANT ALL PRIVILEGES ON cookbook.* TO 'masterchef'@'localhost' IDENTIFIED BY 'letmecook' WITH GRANT OPTION;
 		FLUSH PRIVILEGES;";
