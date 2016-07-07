@@ -12,7 +12,7 @@ require '../config/config.php';
 $app = new \Slim\App(["settings" => $config]);
 
 session_name('cookbook');
-session_set_cookie_params(604800);
+session_set_cookie_params(86400);
 session_start();
 
 // load all dependencies

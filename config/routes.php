@@ -16,7 +16,7 @@ $app->add(function ($request, $response, $next) {
 });
 
 $app->get('/login', function ($request, $response, $args) {
-	return $this->view->render($response, 'login/login.tpl');
+	return $this->view->render($response, 'user/login.tpl');
 });
 
 $app->post('/login', function ($request, $response, $args) {
