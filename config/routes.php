@@ -8,7 +8,7 @@ $app->add(function ($request, $response, $next) {
 		if ($uri != '/login') {
 			$_SESSION['returnUrl'] = $uri;
 
-			return $response->withHeader('Location', 'login');
+			return $response->withHeader('Location', '/login');
 		}
 	}
 

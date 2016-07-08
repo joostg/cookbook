@@ -35,13 +35,13 @@ class User extends Base
             }
         }
     
-        return $response->withHeader('Location', 'login');
+        return $response->withHeader('Location', '/login');
     }
 
     public function logout($request, $response, $args)
     {
         session_destroy();
 
-        return $response->withHeader('Location', 'login');
+        return $response->withHeader('Location', '/login');
     }
 }
