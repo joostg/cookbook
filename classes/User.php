@@ -2,20 +2,46 @@
 
 class User extends Base
 {
-    public function authenticate($user, $pass)
+    public function login($request, $response, $args)
     {
-        $sql = "SELECT hash
-                FROM users
-                WHERE user = :user";
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute(["user" => $user]);
+        return $this->view->render($response, 'user/login.tpl');
+    }
 
-        if (!$result) {
-            return false;
+    public function authenticate($request, $response, $args)
+    {
+        $email = $request->getParam('user');
+        $pass = $request->getParam('pass');
+
+        if ($pass || $email) {
+            $sql = "SELECT hash
+                    FROM users
+                    WHERE user = :user";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute(["user" => $email]);
+
+            if ($result) {
+                $hash = $stmt->fetch();
+
+                if (password_verify($pass, $hash['hash'])) {
+                    $_SESSION['user'] = $email;
+
+                    $uri = '/';
+                    if ($_SESSION['returnUrl']) {
+                        $uri = $_SESSION['returnUrl'];
+                    }
+                    // @TODO: fix return url
+                    return $response->withHeader('Location', '/recipe');
+                }
+            }
         }
+    
+        return $response->withHeader('Location', 'login');
+    }
 
-        $hash = $stmt->fetch();
+    public function logout($request, $response, $args)
+    {
+        session_destroy();
 
-        return password_verify($pass, $hash['hash']);
+        return $response->withHeader('Location', 'login');
     }
 }
