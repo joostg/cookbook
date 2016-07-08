@@ -2,9 +2,9 @@
 
 // check if user is logged in, else redirect to login page
 $app->add(function ($request, $response, $next) {
-	if (!isset($_SESSION['user'])) {
-		$uri = $request->getUri()->getPath();
+	$uri = $uri = $request->getUri()->getPath();
 
+	if (!isset($_SESSION['user']) && strpos($uri, '/achterkant') === 0) {
 		if ($uri != '/login') {
 			$_SESSION['returnUrl'] = $uri;
 
@@ -24,6 +24,8 @@ $app->post('/login', '\User:authenticate');
 $app->get('/logout', '\User:logout');
 
 $app->get('/recipe/{path}', '\Recipe:view');
+
+$app->get('/achterkant', '\Dashboard:view');
 
 $app->get('/achterkant/recipe/edit[/{id}]', '\Recipe:edit');
 

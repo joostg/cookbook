@@ -29,8 +29,8 @@ class User extends Base
                     if ($_SESSION['returnUrl']) {
                         $uri = $_SESSION['returnUrl'];
                     }
-                    // @TODO: fix return url
-                    return $response->withHeader('Location', '/');
+
+                    return $response->withHeader('Location', $uri);
                 }
             }
         }
