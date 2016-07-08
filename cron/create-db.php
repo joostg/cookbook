@@ -7,7 +7,7 @@ $sql = "CREATE DATABASE IF NOT EXISTS cookbook
 
 $sql = "CREATE TABLE users (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, user VARCHAR(32) NOT NULL, hash VARCHAR(255) NOT NULL)";
 
-$sql = "ALTER TABLE users ADD UNIQUE INDEX user (user)";
+$sql = "ALTER TABLE recipes ADD UNIQUE INDEX path (path)";
 
 $sql = "CREATE TABLE IF NOT EXISTS ingredients (
 			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -21,9 +21,9 @@ $sql = "CREATE TABLE IF NOT EXISTS quantities (
 
 $sql = "CREATE TABLE IF NOT EXISTS recipes (
 			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-			name VARCHAR(50) NOT NULL,
-			path VARCHAR(50) NOT NULL,
-			image VARCHAR(50) NOT NULL,
+			name VARCHAR(255) NOT NULL,
+			path VARCHAR(255) NOT NULL,
+			image VARCHAR(255),
 			intro TEXT NOT NULL,
 			description TEXT NOT NULL,
 			creator INT(10) NOT NULL DEFAULT 0,
@@ -36,8 +36,8 @@ $sql = "CREATE TABLE IF NOT EXISTS recipes_ingredients (
 			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 			recipe_id INT NOT NULL,
 			ingredient_id INT NOT NULL,
-			quantity_id INT NOT NULL,
-			quantity DOUBLE(10,2) NOT NULL DEFAULT 0.00
+			quantity_id INT,
+			quantity DOUBLE(10,2)
 		)";
 
 $sql = "ALTER TABLE recipes_ingredients ADD INDEX recipe_id (recipe_id)";

@@ -15,10 +15,12 @@ $app->add(function ($request, $response, $next) {
 	return $next($request, $response);
 });
 
+$app->get('/', '\Home:view');
+
 $app->get('/login', '\User:login');
 
 $app->post('/login', '\User:authenticate');
 
 $app->get('/logout', '\User:logout');
 
-$app->get('/recipe', '\Recipe:view');
+$app->get('/recipe/{path}', '\Recipe:view');

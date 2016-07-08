@@ -12,14 +12,14 @@
 		<title>{% block title %}{% endblock %}</title>
 
 		<!-- Bootstrap core CSS -->
-		<link href="css/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+		<link href="/css/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
 		<!-- Bootstrap theme -->
-		<link href="css/libs/bootstrap/bootstrap-theme.min.css" rel="stylesheet">
+		<link href="/css/libs/bootstrap/bootstrap-theme.min.css" rel="stylesheet">
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-		<link href="css/libs/bootstrap/ie10-viewport-bug-workaround.css" rel="stylesheet">
+		<link href="/css/libs/bootstrap/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
 		<!-- Custom styles for this template -->
-		<link href="css/recept.css" rel="stylesheet">
+		<link href="/css/recept.css" rel="stylesheet">
 	</head>
 
 	<body role="document">
@@ -65,8 +65,8 @@
 		<!-- Placed at the end of the document so the pages load faster -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 		<script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
-		<script src="js/libs/bootstrap/bootstrap.min.js"></script>
+		<script src="/js/libs/bootstrap/bootstrap.min.js"></script>
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-		<script src="js/libs/bootstrap/ie10-viewport-bug-workaround.js"></script>
+		<script src="/js/libs/bootstrap/ie10-viewport-bug-workaround.js"></script>
 	</body>
 </html>

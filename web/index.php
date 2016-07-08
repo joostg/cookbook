@@ -20,6 +20,5 @@ require '../config/dependencies.php';
 
 // add routes
 require '../config/routes.php';
-var_dump($_SESSION);
 
 $app->run();

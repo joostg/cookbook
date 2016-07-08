@@ -6,7 +6,7 @@ $container = $app->getContainer();
 // Register Twig on container
 $container['view'] = function ($container) {
 	$view = new \Slim\Views\Twig('../tpl', [
-		//'cache' => 'path/to/cache'
+		'autoescape' => false
 	]);
 	$view->addExtension(new \Slim\Views\TwigExtension(
 		$container['router'],
@@ -28,7 +28,7 @@ $container['logger'] = function($c) {
 // connect to DB
 $container['db'] = function ($c) {
 	$db = $c['settings']['db'];
-	$pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
+	$pdo = new PDO("mysql:host=" . $db['host'] . ";charset=utf8;dbname=" . $db['dbname'],
 		$db['user'], $db['pass']);
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
