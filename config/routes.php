@@ -24,3 +24,8 @@ $app->post('/login', '\User:authenticate');
 $app->get('/logout', '\User:logout');
 
 $app->get('/recipe/{path}', '\Recipe:view');
+
+$app->get('/achterkant/recipe/edit[/{id}]', '\Recipe:edit');
+
+$app->post('/achterkant/recipe/save[/{id}]', '\Recipe:save');
+

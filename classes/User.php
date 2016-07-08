@@ -30,7 +30,7 @@ class User extends Base
                         $uri = $_SESSION['returnUrl'];
                     }
                     // @TODO: fix return url
-                    return $response->withHeader('Location', '/recipe');
+                    return $response->withHeader('Location', '/');
                 }
             }
         }

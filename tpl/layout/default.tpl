@@ -23,6 +23,7 @@
 	</head>
 
 	<body role="document">
+		{% block menu %}
 		<!-- Fixed navbar -->
 		<nav class="navbar navbar-inverse navbar-fixed-top">
 			<div class="container">
@@ -33,7 +34,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#">Bootstrap theme</a>
+					<a class="navbar-brand" href="/">Cookbook.dev</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
@@ -57,6 +58,7 @@
 				</div><!--/.nav-collapse -->
 			</div>
 		</nav>
+		{% endblock %}
 
 		{% block content %}{% endblock %}
 

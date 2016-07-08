@@ -31,4 +31,28 @@ class Recipe extends Base
 
 		return $this->view->render($response, 'recipe/browse.tpl', $data);
 	}
+
+	public function edit($request, $response, $args)
+	{
+		$data = array();
+		if ($args['id']) {
+			$sql = "SELECT id, name, intro, description
+                    FROM recipes
+                    WHERE id = :id";
+			$stmt = $this->db->prepare($sql);
+			$result = $stmt->execute(["id" => $args['id']]);
+
+			$data = $stmt->fetch();
+		}
+
+		return $this->view->render($response, 'recipe/edit.tpl', $data);
+	}
+
+	public function save($request, $response, $args)
+	{
+		var_dump($request->getParsedBody());
+		die();
+
+		return $this->view->render($response, 'recipe/edit.tpl', $data);
+	}
 }
