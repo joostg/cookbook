@@ -44,6 +44,9 @@ class Recipe extends Base
 
 			$data = $stmt->fetch();
 		}
+		
+		$data['js'][] = '/js/libs/sortable-min.js';
+		$data['js'][] = '/js/recipe.js';
 
 		return $this->view->render($response, 'recipe/edit.tpl', $data);
 	}

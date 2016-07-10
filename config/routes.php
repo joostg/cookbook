@@ -23,7 +23,7 @@ $app->post('/login', '\User:authenticate');
 
 $app->get('/logout', '\User:logout');
 
-$app->get('/recipe/{path}', '\Recipe:view');
+$app->get('/recept/{path}', '\Recipe:view');
 
 $app->get('/achterkant', '\Dashboard:view');
 
