@@ -43,6 +43,3 @@ $sql = "CREATE TABLE IF NOT EXISTS recipes_ingredients (
 $sql = "ALTER TABLE recipes_ingredients ADD INDEX recipe_id (recipe_id)";
 $sql = "ALTER TABLE recipes_ingredients ADD INDEX ingredient_id (ingredient_id)";
 $sql = "ALTER TABLE recipes_ingredients ADD INDEX quantity_id (quantity_id)";
-
-$sql = "GRANT ALL PRIVILEGES ON cookbook.* TO 'masterchef'@'localhost' IDENTIFIED BY 'letmecook' WITH GRANT OPTION;
-		FLUSH PRIVILEGES;";
