@@ -39,7 +39,22 @@ class Recipe extends Base
 		return $this->view->render($response, 'recipe/browse.tpl', $data);
 	}
 
-	public function edit($request, $response, $args)
+	public function admin_list($request, $response, $args)
+	{
+		$sql = "SELECT 
+					id,
+					name
+				FROM recipes
+				ORDER BY name";
+		$stmt = $this->db->prepare($sql);
+		$result = $stmt->execute();
+		
+		$data['recipes'] = $stmt->fetchAll();
+
+		return $this->view->render($response, 'recipe/admin_list.tpl', $data);
+	}
+	
+	public function admin_edit($request, $response, $args)
 	{
 		$data = array();
 		if ($args['id']) {
@@ -78,7 +93,7 @@ class Recipe extends Base
 		return $this->view->render($response, 'recipe/edit.tpl', $data);
 	}
 
-	public function save($request, $response, $args)
+	public function admin_save($request, $response, $args)
 	{
 		$post = $request->getParsedBody();
 

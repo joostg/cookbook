@@ -27,7 +27,9 @@ $app->get('/recept/{path}', '\Recipe:view');
 
 $app->get('/achterkant', '\Dashboard:view');
 
-$app->get('/achterkant/recipe/edit[/{id}]', '\Recipe:edit');
+$app->get('/achterkant/recipe', '\Recipe:admin_list');
 
-$app->post('/achterkant/recipe/save[/{id}]', '\Recipe:save');
+$app->get('/achterkant/recipe/edit[/{id}]', '\Recipe:admin_edit');
+
+$app->post('/achterkant/recipe/save[/{id}]', '\Recipe:admin_save');
 
