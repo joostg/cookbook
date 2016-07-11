@@ -27,9 +27,14 @@ $app->get('/recept/{path}', '\Recipe:view');
 
 $app->get('/achterkant', '\Dashboard:view');
 
-$app->get('/achterkant/recipe', '\Recipe:admin_list');
+$app->get('/achterkant/recepten', '\Recipe:admin_list');
 
-$app->get('/achterkant/recipe/edit[/{id}]', '\Recipe:admin_edit');
+$app->get('/achterkant/recepten/wijzigen[/{id}]', '\Recipe:admin_edit');
 
-$app->post('/achterkant/recipe/save[/{id}]', '\Recipe:admin_save');
+$app->post('/achterkant/recepten/opslaan[/{id}]', '\Recipe:admin_save');
 
+$app->get('/achterkant/ingredienten', '\Ingredient:admin_list');
+
+$app->get('/achterkant/ingredienten/wijzigen[/{id}]', '\Ingredient:admin_edit');
+
+$app->post('/achterkant/ingredienten/opslaan[/{id}]', '\Ingredient:admin_save');

@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <h1>Recept editor</h1>
 
-            <form method="post" action="/achterkant/recipe/save" id="recipe">
+            <form method="post" action="/achterkant/recepten/opslaan" id="recipe">
                 <div class="col-md-6">
                     {% if id %}
                         <div class="form-group">
@@ -85,7 +85,7 @@
                 </div>
 
                 <button type="button" class="btn btn-default add-ingredient" aria-label="Left Align">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ingrediënt toevoegen
                 </button>
             </form>
         </div>

@@ -43,7 +43,8 @@ class Recipe extends Base
 	{
 		$sql = "SELECT 
 					id,
-					name
+					name,
+					created
 				FROM recipes
 				ORDER BY name";
 		$stmt = $this->db->prepare($sql);
@@ -57,7 +58,7 @@ class Recipe extends Base
 	public function admin_edit($request, $response, $args)
 	{
 		$data = array();
-		if ($args['id']) {
+		if (array_key_exists('id', $args)) {
 			$data['id'] = $args['id'];
 			
 			$sql = "SELECT 
@@ -90,7 +91,7 @@ class Recipe extends Base
 		$data['js'][] = '/js/libs/sortable-min.js';
 		$data['js'][] = '/js/recipe.js';
 
-		return $this->view->render($response, 'recipe/edit.tpl', $data);
+		return $this->view->render($response, 'recipe/admin_edit.tpl', $data);
 	}
 
 	public function admin_save($request, $response, $args)
@@ -200,7 +201,7 @@ class Recipe extends Base
 			}
 		}
 
-		return $response->withHeader('Location', '/');
+		return $response->withHeader('Location', '/achterkant/recepten');
 	}
 
 	public function getQuantityList()
