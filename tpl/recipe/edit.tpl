@@ -7,9 +7,13 @@
         <div class="col-md-12">
             <h1>Recept editor</h1>
 
-
             <form method="post" action="/achterkant/recipe/save" id="recipe">
                 <div class="col-md-6">
+                    {% if id %}
+                        <div class="form-group">
+                            <input type="hidden" name="id" id="id" value="{{ id }}">
+                        </div>
+                    {% endif %}
                     <div class="form-group">
                         <label for="name">Naam</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Naam" value="{% if recipe.name %}{{ recipe.name }}{% endif %}" required="required">
@@ -48,7 +52,7 @@
                                     <label class="sr-only" for="quantity">Hoeveelheid</label>
                                     <input type="number" min="0.00" class="form-control quantity" value="{{ ingredientrow.quantity }}">
                                 </div>
-                                <div class="col-xs-6 col-sm-4">
+                                <div class="col-xs-6 col-sm-3">
                                     <label class="sr-only" for="quantity_id">Kwantiteit</label>
                                     <select class="form-control quantity_id">
                                         <option value=""></option>
@@ -60,7 +64,7 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="col-xs-12 col-sm-4">
+                                <div class="col-xs-10 col-sm-4">
                                     <label class="sr-only" for="ingredient_id">Ingrediënt</label>
                                     <select class="form-control ingredient_id">
                                         <option value=""></option>
@@ -71,6 +75,9 @@
                                             </option>
                                         {% endfor %}
                                     </select>
+                                </div>
+                                <div class="col-xs-1 col-sm-1">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                 </div>
                             </div>
                         {% endfor %}
@@ -92,7 +99,7 @@
             <label class="sr-only" for="quantity">Hoeveelheid</label>
             <input type="number" min="0.00" class="form-control quantity">
         </div>
-        <div class="col-xs-6 col-sm-4">
+        <div class="col-xs-6 col-sm-3">
             <label class="sr-only" for="quantity_id">Kwantiteit</label>
             <select class="form-control quantity_id">
                 <option value=""></option>
@@ -101,7 +108,7 @@
                 {% endfor %}
             </select>
         </div>
-        <div class="col-xs-12 col-sm-4">
+        <div class="col-xs-10 col-sm-4">
             <label class="sr-only" for="ingredient_id">Ingrediënt</label>
             <select class="form-control ingredient_id">
                 <option value=""></option>
@@ -109,6 +116,9 @@
                     <option value="{{ ingredient.id }}">{{ ingredient.name }}</option>
                 {% endfor %}
             </select>
+        </div>
+        <div class="col-xs-1 col-sm-1">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>
     </div>{% endset %}
 

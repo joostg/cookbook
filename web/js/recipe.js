@@ -1,6 +1,4 @@
 $('document').ready(function() {
-
-
     var el = document.getElementById('ingredients');
     Sortable.create(el,  {
         handle: '.glyphicon-move',
@@ -9,6 +7,11 @@ $('document').ready(function() {
 
     $('.add-ingredient').on('click', function() {
         document.getElementById('ingredients').innerHTML += ingredientRow;
+    });
+
+
+    $(document).on('click', '.glyphicon-remove', function() {
+        $(this).closest('.row').remove();
     });
 });
 

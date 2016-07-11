@@ -12,6 +12,9 @@ $container['view'] = function ($container) {
 		$container['router'],
 		$container['request']->getUri()
 	));
+	$view->addExtension(new Cocur\Slugify\Bridge\Twig\SlugifyExtension(
+		Cocur\Slugify\Slugify::create()
+	));
 
 	return $view;
 };
@@ -33,6 +36,12 @@ $container['db'] = function ($c) {
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 	return $pdo;
+};
+
+// Add slugify for pathnames
+$container['slugify'] = function ($c) {
+	$slugify = new Cocur\Slugify\Slugify;
+	return $slugify;
 };
 
 // prepare clean print-function
