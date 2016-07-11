@@ -42,9 +42,20 @@ class Recipe extends Base
 			$stmt = $this->db->prepare($sql);
 			$result = $stmt->execute(["id" => $args['id']]);
 
-			$data = $stmt->fetch();
+			$data['recipe'] = $stmt->fetch();
+
+			$sql = "SELECT quantity, quantity_id, ingredient_id
+					FROM recipes_ingredients
+					WHERE recipe_id = :recipe_id";
+			$stmt = $this->db->prepare($sql);
+			$result = $stmt->execute(["recipe_id" => $args['id']]);
+
+			$data['ingredients'] = $stmt->fetchAll();
 		}
-		
+
+		$data['quantity_list'] = $this->getQuantityList();
+		$data['ingredient_list'] = $this->getIngredientList();
+
 		$data['js'][] = '/js/libs/sortable-min.js';
 		$data['js'][] = '/js/recipe.js';
 
@@ -57,5 +68,27 @@ class Recipe extends Base
 		die();
 
 		return $this->view->render($response, 'recipe/edit.tpl', $data);
+	}
+
+	public function getQuantityList()
+	{
+		$sql = "SELECT id, name
+				FROM quantities
+				ORDER BY name";
+		$stmt = $this->db->prepare($sql);
+		$result = $stmt->execute();
+
+		return $stmt->fetchAll();
+	}
+
+	public function getIngredientList()
+	{
+		$sql = "SELECT id, name
+				FROM ingredients
+				ORDER BY name";
+		$stmt = $this->db->prepare($sql);
+		$result = $stmt->execute();
+
+		return $stmt->fetchAll();
 	}
 }

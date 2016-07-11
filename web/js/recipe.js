@@ -5,30 +5,10 @@ $('document').ready(function() {
     Sortable.create(el,  {
         handle: '.glyphicon-move',
         animation: 150,
-        onSort: function (/**Event*/evt) {
-            createHiddenDiv();
-        },
     });
 
     $('.add-ingredient').on('click', function() {
-    /*    var divs = document.getElementsByClassName("list-group-item");
-        for(var i = 0; i < divs.length; i++){
-            var child = divs[i];
-            console.log(child.getValue('quantity'));
-        }*/
-
-        //console.log( $('.list-group-item').serialize() );
-
-        $(".quantity:input").each(function(){
-            var input = $(this); // This is the jquery object of the input, do what you will
-            console.log(input.val())
-        });
-        
-        
-        /*var html = document.getElementById('ingredient-row').innerHTML;
-
-         document.getElementById('ingredient-div').innerHTML += html;*/
-
+        document.getElementById('ingredients').innerHTML += ingredientRow;
     });
 });
 
@@ -39,7 +19,29 @@ function createHiddenDiv() {
     $(".quantity:input").each(function(){
         var input = document.createElement("input");
         input.type = "hidden";
-        input.name = "ingredient" + i + "-quantity";
+        input.name = "ingredient-quantity-" + i;
+        input.value = $(this).val();
+
+        i++;
+        form.appendChild(input);
+    });
+
+    var i = 1;
+    $(".quantity_id").each(function(){
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "ingredient-quantity-id-" + i;
+        input.value = $(this).val();
+
+        i++;
+        form.appendChild(input);
+    });
+
+    var i = 1;
+    $(".ingredient_id").each(function(){
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "ingredient-ingredient-id-" + i;
         input.value = $(this).val();
 
         i++;
