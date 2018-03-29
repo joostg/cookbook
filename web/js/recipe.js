@@ -6,7 +6,9 @@ $('document').ready(function() {
     });
 
     $('.add-ingredient').on('click', function() {
-        document.getElementById('ingredients').innerHTML += ingredientRow;
+        var container = document.createElement("div");
+        container.innerHTML = ingredientRow;
+        document.getElementById('ingredients').appendChild(container);
     });
 
 
