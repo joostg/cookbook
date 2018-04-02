@@ -1,8 +1,8 @@
 <?php
-
+namespace cookbook\backend\classes;
 class Ingredient extends Base
 {
-	public function admin_list($request, $response, $args)
+	public function list($request, $response, $args)
 	{
 		$sql = "SELECT 
 					id,
@@ -15,10 +15,10 @@ class Ingredient extends Base
 
 		$data['ingredients'] = $stmt->fetchAll();
 
-		return $this->view->render($response, 'ingredient/admin_list.tpl', $data);
+		return $this->render($response, $data);
 	}
 
-	public function admin_edit($request, $response, $args)
+	public function edit($request, $response, $args)
 	{
 		$data = array();
 		if (array_key_exists('id', $args)) {
@@ -36,10 +36,10 @@ class Ingredient extends Base
 			$data['ingredient'] = $stmt->fetch();
 		}
 
-		return $this->view->render($response, 'ingredient/admin_edit.tpl', $data);
+		return $this->render($response, $data);
 	}
 
-	public function admin_save($request, $response, $args)
+	public function save($request, $response, $args)
 	{
 		$post = $request->getParsedBody();
 
@@ -77,6 +77,6 @@ class Ingredient extends Base
 			]);
 		}
 
-		return $response->withHeader('Location', '/achterkant/ingredienten');
+		return $response->withHeader('Location', $this->baseUrl . 'ingredienten');
 	}
 }

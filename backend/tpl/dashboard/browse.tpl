@@ -1,4 +1,4 @@
-{% extends 'layout/dashboard.tpl' %}
+{% extends '/backend/tpl/layout/default.tpl' %}
 
 {% block title %}Dashboard{% endblock %}
 

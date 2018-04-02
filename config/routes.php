@@ -15,26 +15,38 @@ $app->add(function ($request, $response, $next) {
 	return $next($request, $response);
 });
 
-$app->get('/', '\Home:view');
+$app->get('/', \cookbook\frontend\classes\Home::class . ':view');
+$app->get('/recept/{path}',  \cookbook\frontend\classes\Recipe::class . ':view');
 
-$app->get('/login', '\User:login');
 
-$app->post('/login', '\User:authenticate');
+$app->get('/achterkant', \cookbook\backend\classes\Dashboard::class . ':browse');
 
-$app->get('/logout', '\User:logout');
+/* ======================
+ * Backend Authentication
+ * ====================== */
+$app->get('/login', \cookbook\backend\classes\User::class . ':login');
+$app->post('/login', \cookbook\backend\classes\User::class . ':authenticate');
+$app->post('/restore-cookie', \cookbook\backend\classes\User::class . ':restoreCookie');
+$app->get('/logout', \cookbook\backend\classes\User::class . ':logout');
 
-$app->get('/recept/{path}', '\Recipe:view');
 
-$app->get('/achterkant', '\Dashboard:view');
+/* ===============
+ * Backend Recipes
+ * =============== */
+$app->get('/recepten', \cookbook\backend\classes\Recipe::class . ':list');
+$app->get('/recepten/wijzigen[/{id}]', \cookbook\backend\classes\Recipe::class . ':edit');
+$app->post('/recepten/opslaan[/{id}]', \cookbook\backend\classes\Recipe::class . ':save');
 
-$app->get('/achterkant/recepten', '\Recipe:admin_list');
+/* ===================
+ * Backend Ingredients
+ * =================== */
+$app->get('/ingredienten', \cookbook\backend\classes\Ingredient::class . ':list');
+$app->get('/ingredienten/wijzigen[/{id}]', \cookbook\backend\classes\Ingredient::class . ':edit');
+$app->post('/ingredienten/opslaan[/{id}]', \cookbook\backend\classes\Ingredient::class . ':save');
 
-$app->get('/achterkant/recepten/wijzigen[/{id}]', '\Recipe:admin_edit');
-
-$app->post('/achterkant/recepten/opslaan[/{id}]', '\Recipe:admin_save');
-
-$app->get('/achterkant/ingredienten', '\Ingredient:admin_list');
-
-$app->get('/achterkant/ingredienten/wijzigen[/{id}]', '\Ingredient:admin_edit');
-
-$app->post('/achterkant/ingredienten/opslaan[/{id}]', '\Ingredient:admin_save');
+/* ==================
+ * Backend Quantities
+ * ================== */
+$app->get('/hoeveelheden', \cookbook\backend\classes\Quantity::class .  ':list');
+$app->get('/hoeveelheden/wijzigen[/{id}]', \cookbook\backend\classes\Quantity::class .  ':edit');
+$app->post('/hoeveelheden/opslaan[/{id}]', \cookbook\backend\classes\Quantity::class . ':save');

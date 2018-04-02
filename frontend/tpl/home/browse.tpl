@@ -1,4 +1,4 @@
-{% extends 'layout/default.tpl' %}
+{% extends 'frontend/tpl/layout/default.tpl' %}
 
 {% block title %}Cookbook.dev{% endblock %}
 

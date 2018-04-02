@@ -1,4 +1,4 @@
-{% extends 'layout/dashboard.tpl' %}
+{% extends '/backend/tpl/layout/default.tpl' %}
 
 {% block title %}Recepten{% endblock %}
 
@@ -6,7 +6,7 @@
     <div class="container theme-showcase" role="main">
         <div class="col-md-12">
             <h1>Recepten</h1>
-            <a href="/achterkant/recepten/wijzigen" class="btn btn-default active" >
+            <a href="{{ data.global.base_url }}/recepten/wijzigen" class="btn btn-default active" >
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Recept toevoegen
             </a>
         </div>
@@ -22,7 +22,7 @@
                {% for recipe in recipes %}
                    <tr>
                        <td>
-                           <a href="/achterkant/recepten/wijzigen/{{ recipe.id }}">
+                           <a href="{{ data.global.base_url }}/recepten/wijzigen/{{ recipe.id }}">
                                <span class="glyphicon glyphicon-pencil"></span>
                            </a>
                        </td>

@@ -5,7 +5,7 @@ $container = $app->getContainer();
 
 // Register Twig on container
 $container['view'] = function ($container) {
-	$view = new \Slim\Views\Twig('../tpl', [
+	$view = new \Slim\Views\Twig('../', [
 		'autoescape' => false
 	]);
 	$view->addExtension(new \Slim\Views\TwigExtension(

@@ -1,4 +1,5 @@
 <?php
+namespace cookbook\frontend\classes;
 
 class Recipe extends Base
 {
@@ -36,7 +37,7 @@ class Recipe extends Base
 			}
 		}
 
-		return $this->view->render($response, 'recipe/browse.tpl', $data);
+		return $this->view->render($response, 'frontend/tpl/recipe/browse.tpl', $data);
 	}
 
 	public function admin_list($request, $response, $args)

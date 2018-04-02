@@ -1,4 +1,4 @@
-{% extends 'layout/dashboard.tpl' %}
+{% extends '/backend/tpl/layout/default.tpl' %}
 
 {% block title %}Ingrediënten{% endblock %}
 
@@ -6,7 +6,7 @@
     <div class="container theme-showcase" role="main">
         <div class="col-md-12">
             <h1>Ingrediënten</h1>
-            <a href="/achterkant/ingredienten/wijzigen" class="btn btn-default active" >
+            <a href="{{ data.global.base_url }}/ingredienten/wijzigen" class="btn btn-default active" >
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ingrediënt toevoegen
             </a>
         </div>
@@ -21,7 +21,7 @@
                {% for ingredient in ingredients %}
                    <tr>
                        <td>
-                           <a href="/achterkant/ingredienten/wijzigen/{{ ingredient.id }}">
+                           <a href="{{ data.global.base_url }}/ingredienten/wijzigen/{{ ingredient.id }}">
                                 <span class="glyphicon glyphicon-pencil"></span>
                            </a>
                        </td>

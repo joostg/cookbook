@@ -1,10 +1,21 @@
 <?php
+namespace cookbook;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require '../vendor/autoload.php';
 spl_autoload_register(function ($classname) {
-	require ("../classes/" . $classname . ".php");
+	$file = __DIR__ . '/../' . $classname . '.php';
+
+	if (!file_exists($file)) {
+		return false;
+	}
+
+	require $file;
+
+	return true;
+
+	//require ("../classes/" . $classname . ".php");
 });
 
 require '../config/config.php';

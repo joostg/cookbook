@@ -38,9 +38,9 @@
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						<li><a href="/achterkant/recepten">Recepten</a></li>
-						<li><a href="/achterkant/ingredienten">Ingrediënten</a></li>
-						<li><a href="/achterkant/hoeveelheden">Hoeveelheden</a></li>
+						<li><a href="/recepten">Recepten</a></li>
+						<li><a href="/ingredienten">Ingrediënten</a></li>
+						<li><a href="/hoeveelheden">Hoeveelheden</a></li>
 						<li><a href="/logout">Uitloggen</a></li>
 					</ul>
 				</div><!--/.nav-collapse -->

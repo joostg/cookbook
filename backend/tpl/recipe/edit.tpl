@@ -1,4 +1,4 @@
-{% extends 'layout/dashboard.tpl' %}
+{% extends '/backend/tpl/layout/default.tpl' %}
 
 {% block title %}Recept editor{% endblock %}
 
@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <h1>Recept editor</h1>
 
-            <form method="post" action="/achterkant/recepten/opslaan" id="recipe">
+            <form method="post" action="{{ data.global.base_url }}/recepten/opslaan" id="recipe">
                 <div class="col-md-6">
                     {% if id %}
                         <div class="form-group">
@@ -25,17 +25,6 @@
                     <div class="form-group">
                         <label for="description">Beschrijving</label>
                         <textarea class="form-control" id="description" name="description" required="required" rows="10">{% if recipe.description %}{{ recipe.description }}{% endif %}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="image">Afbeelding</label>
-                        <select class="form-control" id="image" name="image">
-                            <option value=""></option>
-                            <option value="1">Afbeelding 1</option>
-                            <option value="2">Afbeelding 2</option>
-                            <option value="3">Afbeelding 3</option>
-                            <option value="4">Afbeelding 4</option>
-                            <option value="5">Afbeelding 5</option>
-                        </select>
                     </div>
 
                     <button type="submit" class="btn btn-default" onclick="createHiddenDiv();">Opslaan</button>
