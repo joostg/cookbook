@@ -1,9 +1,7 @@
 <?php
 
-
 spl_autoload_register(function ($classname) {
-	$file = __DIR__ . '/../' . str_replace('\\','/',$classname) . '.php';
-	printr($file);die();
+	$file = __DIR__ . '/../' . str_replace('\\','/',str_replace('cookbook\\','',$classname)) . '.php';
 
 	if (!file_exists($file)) {
 		return false;
@@ -12,6 +10,4 @@ spl_autoload_register(function ($classname) {
 	require $file;
 
 	return true;
-
-	//require ("../classes/" . $classname . ".php");
 });
