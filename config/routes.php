@@ -19,7 +19,7 @@ $app->get('/', \cookbook\frontend\classes\Home::class . ':view');
 $app->get('/recept/{path}',  \cookbook\frontend\classes\Recipe::class . ':view');
 
 
-$app->get('/achterkant', \cookbook\backend\classes\Dashboard::class . ':browse');
+$app->get('/achterkant/', \cookbook\backend\classes\Dashboard::class . ':browse');
 
 /* ======================
  * Backend Authentication
