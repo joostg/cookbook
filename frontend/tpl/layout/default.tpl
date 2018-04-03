@@ -66,7 +66,7 @@
 <script src="/css/libs/jquery-3.3.1.min.js"></script>
 <script src="/css/libs/popper.min.js"></script>
 <script src="/css/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="/css/libs/holder.min.js"></script>
 {% if js %}{% for jsfile in js %}
 	<script src="{{ jsfile }}"></script>
 {% endfor %}{% endif %}
