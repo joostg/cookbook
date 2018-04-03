@@ -164,7 +164,7 @@ class Recipe extends Base
 			}
 		}
 
-		return $response->withHeader('Location', $this->baseUrl . 'recepten');
+		return $response->withHeader('Location', $this->baseUrl . '/recepten');
 	}
 
 	public function getQuantityList()

@@ -7,7 +7,7 @@
 		<div class="col-md-6">
 			<h1>Dashboard</h1>
 
-			<p>Welkom, {{ user }}.</p>
+			<p>Welkom, {{ data.user }}.</p>
 		</div>
 	</div>
 

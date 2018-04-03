@@ -77,6 +77,6 @@ class Ingredient extends Base
 			]);
 		}
 
-		return $response->withHeader('Location', $this->baseUrl . 'ingredienten');
+		return $response->withHeader('Location', $this->baseUrl . '/ingredienten');
 	}
 }

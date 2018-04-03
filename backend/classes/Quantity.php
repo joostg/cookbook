@@ -77,6 +77,6 @@ class Quantity extends Base
 			]);
 		}
 
-		return $response->withHeader('Location', $this->baseUrl . 'hoeveelheden');
+		return $response->withHeader('Location', $this->baseUrl . '/hoeveelheden');
 	}
 }

@@ -3,7 +3,7 @@
         "slim/slim": "^3.4",
         "monolog/monolog": "^1.19",
         "slim/twig-view": "^2.1",
-        "twbs/bootstrap": "^3.3",
+        "twbs/bootstrap": "^4.0",
         "cocur/slugify": "^2.2"
     }
 }

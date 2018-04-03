@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 		<meta name="description" content="">
 		<meta name="author" content="">
@@ -11,49 +11,62 @@
 
 		<title>{% block title %}{% endblock %}</title>
 
-		<!-- Bootstrap core CSS -->
-		<link href="/css/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
-		<!-- Bootstrap theme -->
-		<link href="/css/libs/bootstrap/bootstrap-theme.min.css" rel="stylesheet">
-		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-		<link href="/css/libs/bootstrap/ie10-viewport-bug-workaround.css" rel="stylesheet">
+		<link rel="stylesheet" href="/css/libs/bootstrap/dist/css/bootstrap.min.css">
 
+		<style>
+			body {
+				padding-top: 54px;
+			}
+			@media (min-width: 992px) {
+				body {
+					padding-top: 56px;
+				}
+			}
+
+		</style>
 		<!-- Custom styles for this template -->
 		<link href="/css/recept.css" rel="stylesheet">
 	</head>
 
 	<body role="document">
 		{% block menu %}
-		<!-- Fixed navbar -->
-		<nav class="navbar navbar-inverse navbar-fixed-top">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="/">Cookbook.dev</a>
-				</div>
-				<div id="navbar" class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li><a href="/recepten">Recepten</a></li>
-						<li><a href="/ingredienten">Ingrediënten</a></li>
-						<li><a href="/hoeveelheden">Hoeveelheden</a></li>
-						<li><a href="/logout">Uitloggen</a></li>
+				<a class="navbar-brand" href="#">Start Bootstrap</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarResponsive">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item active">
+							<a class="nav-link" href="/">Home
+								<span class="sr-only">(current)</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ data.global.base_url }}/recepten">Recepten</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ data.global.base_url }}/ingredienten">Ingrediënten</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ data.global.base_url }}/hoeveelheden">Hoeveelheden</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ data.global.base_url }}/logout">Uitloggen</a>
+						</li>
 					</ul>
-				</div><!--/.nav-collapse -->
+				</div>
 			</div>
 		</nav>
 		{% endblock %}
 
 		{% block content %}{% endblock %}
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
-		<script src="/js/libs/bootstrap/bootstrap.min.js"></script>
-		<script src="/js/libs/bootstrap/ie10-viewport-bug-workaround.js"></script>
+		<script src="/css/libs/jquery-3.3.1.min.js"></script>
+		<script src="/css/libs/popper.min.js"></script>
+		<script src="/css/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 		{% if js %}{% for jsfile in js %}
 			<script src="{{ jsfile }}"></script>
 		{% endfor %}{% endif %}

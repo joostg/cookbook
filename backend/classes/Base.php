@@ -1,35 +1,49 @@
 <?php
 namespace cookbook\backend\classes;
-abstract class Base {
-	protected $baseUrl;
-	protected $ci;
-	protected $db;
-	protected $view;
-	protected $slugify;
+abstract class Base
+{
+    protected $baseUrl;
+    protected $ci;
+    protected $db;
+    protected $view;
+    protected $slugify;
 
-	public function __construct(\Slim\Container $ci) {
-		$this->ci = $ci;
-		$this->db = $this->ci->get('db');
-		$this->view = $this->ci->get('view');
-		$this->slugify = $this->ci->get('slugify');
-		$this->baseUrl = $this->ci->get('settings')->get('base_url');
-	}
-	
-	protected function render($response, array $data, $file = null)
-	{
-		$file = $this->getTemplateFile($file);
-		$class = str_replace('\\','/',strtolower(get_class($this)));
-		$class = str_replace('cookbook/','',$class);
-		$class = str_replace('classes','tpl',$class);
+    public function __construct(\Slim\Container $ci)
+    {
+        $this->ci = $ci;
+        $this->db = $this->ci->get('db');
+        $this->view = $this->ci->get('view');
+        $this->slugify = $this->ci->get('slugify');
+        $this->baseUrl = $this->ci->get('settings')->get('base_url');
+    }
 
-		$template = $class . '/' . $file . '.tpl';
+    protected function render($response, array $data, $file = null)
+    {
+        $file = $this->getTemplateFile($file);
+        $class = str_replace('\\', '/', strtolower(get_class($this)));
+        $class = str_replace('cookbook/', '', $class);
+        $class = str_replace('classes', 'tpl', $class);
 
-		$data['global'] = array(
-			'base_url' => $this->baseUrl,
-		);
+        $template = $class . '/' . $file . '.tpl';
 
-		return $this->view->render($response, $template, $data);
-	}
+        $data['global'] = array(
+            'base_url' => $this->baseUrl,
+        );
+
+        return $this->view->render($response, $template, array('data' => $data));
+    }
+
+    protected function getReturnUri()
+    {
+        $uri = $this->baseUrl;
+        if ($_SESSION['returnUrl']) {
+            $returnUrl = str_replace('/achterkant','',$_SESSION['returnUrl']);
+
+            $uri .= $returnUrl;
+        }
+
+        return $uri;
+    }
 
 	/**
 	 * Determines template file to use from calling method name if not explicitly given

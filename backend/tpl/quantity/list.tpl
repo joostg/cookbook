@@ -18,11 +18,12 @@
                     <th>Hoeveelheid</th>
                     <th>Meervoud</th>
                 </tr>
-               {% for quantity in quantities %}
+               {% for quantity in data.quantities %}
                    <tr>
                        <td>
                            <a href="{{ data.global.base_url }}/hoeveelheden/wijzigen/{{ quantity.id }}">
                                 <span class="glyphicon glyphicon-pencil"></span>
+                               wijzigen
                            </a>
                        </td>
                        <td>

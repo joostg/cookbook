@@ -10,7 +10,7 @@
         <div class="col-md-2">
             <h1>Inloggen</h1>
 
-            <form method="post" action="/login">
+            <form method="post" action="{{ data.global.base_url }}/login">
                 <p><input type="text" id="user" name="user" value="" placeholder="Gebruikersnaam" required="required"></p>
                 <p><input type="password" id="pass" name="pass" value="" placeholder="Wachtwoord" required="required"></p>
 

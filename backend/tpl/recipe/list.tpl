@@ -19,11 +19,12 @@
                     <th>Recept</th>
                     <th>Aangemaakt</th>
                 </tr>
-               {% for recipe in recipes %}
+               {% for recipe in data.recipes %}
                    <tr>
                        <td>
                            <a href="{{ data.global.base_url }}/recepten/wijzigen/{{ recipe.id }}">
                                <span class="glyphicon glyphicon-pencil"></span>
+                               wijzigen
                            </a>
                        </td>
                        <td>

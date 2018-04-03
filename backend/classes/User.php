@@ -11,12 +11,7 @@ class User extends Base
 
         // Attempt to restore logged in user from cookie first. If successful redirect to returnUrl
         if ($this->restoreCookie()) {
-            $uri = $this->baseUrl;
-            if ($_SESSION['returnUrl']) {
-                $uri = $_SESSION['returnUrl'];
-            }
-
-            return $response->withHeader('Location', $uri);
+            return $response->withHeader('Location', $this->getReturnUri());
         }
 
 		return $this->render($response, array());
@@ -40,24 +35,19 @@ class User extends Base
                 if (password_verify($pass, $hash['hash'])) {
                     $_SESSION['user'] = $email;
 
-                    $uri = '/';
-                    if ($_SESSION['returnUrl']) {
-                        $uri = $_SESSION['returnUrl'];
-                    }
-
-                    return $response->withHeader('Location', $uri);
+                    return $response->withHeader('Location', $this->getReturnUri());
                 }
             }
         }
     
-        return $response->withHeader('Location', $this->baseUrl . 'login');
+        return $response->withHeader('Location', $this->baseUrl . '/login');
     }
 
     public function logout($request, $response, $args)
     {
         session_destroy();
 
-        return $response->withHeader('Location', $this->baseUrl . 'login');
+        return $response->withHeader('Location', $this->baseUrl . '/login');
     }
 
     function restoreCookie()

@@ -18,7 +18,7 @@
                     <th>Ingrediënt</th>
                     <th>Meervoud</th>
                 </tr>
-               {% for ingredient in ingredients %}
+               {% for ingredient in data.ingredients %}
                    <tr>
                        <td>
                            <a href="{{ data.global.base_url }}/ingredienten/wijzigen/{{ ingredient.id }}">
