@@ -1,9 +1,9 @@
 $('document').ready(function() {
     var el = document.getElementById('ingredients');
-    Sortable.create(el,  {
-        handle: '.glyphicon-move',
+    Sortable.create(el/*,  {
+        handle: '.fa-arrows-alt',
         animation: 150,
-    });
+    }*/);
 
     $('.add-ingredient').on('click', function() {
         var container = document.createElement("div");

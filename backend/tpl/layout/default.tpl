@@ -12,6 +12,7 @@
 		<title>{% block title %}{% endblock %}</title>
 
 		<link rel="stylesheet" href="/css/libs/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/libs/fontawesome/css/fontawesome-all.min.css">
 
 		<style>
 			body {
@@ -70,7 +71,7 @@
 		<script src="/css/libs/popper.min.js"></script>
 		<script src="/css/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-		{% if js %}{% for jsfile in js %}
+		{% if data.js %}{% for jsfile in data.js %}
 			<script src="{{ jsfile }}"></script>
 		{% endfor %}{% endif %}
 	</body>

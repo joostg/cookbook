@@ -15,11 +15,11 @@
 
 	<style>
 		body {
-			padding-top: 54px;
+			padding-top: 74px;
 		}
 		@media (min-width: 992px) {
 			body {
-				padding-top: 56px;
+				padding-top: 76px;
 			}
 		}
 
@@ -67,8 +67,8 @@
 <script src="/css/libs/popper.min.js"></script>
 <script src="/css/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/css/libs/holder.min.js"></script>
-{% if js %}{% for jsfile in js %}
+{% for jsfile in data.js %}
 	<script src="{{ jsfile }}"></script>
-{% endfor %}{% endif %}
+{% endfor %}
 </body>
 </html>

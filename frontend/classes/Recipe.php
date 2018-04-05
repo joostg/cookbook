@@ -6,11 +6,15 @@ class Recipe extends Base
 	public function view($request, $response, $args)
 	{
 		$sql = "SELECT 
-					id,
-					name,
-					intro,
-					description
-				FROM recipes
+					r.id,
+                    r.name,
+                    r.intro,
+                    r.description,
+                    r.path,
+                    i.title,
+                    i.path_recipe_page
+				FROM recipes r
+				LEFT JOIN `images` i ON i.id = r.image
 				WHERE path = :path";
 		$stmt = $this->db->prepare($sql);
 		$result = $stmt->execute(["path" => $args['path']]);
