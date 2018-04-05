@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS recipes (
 			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 			name VARCHAR(255) NOT NULL,
 			path VARCHAR(255) NOT NULL,
-			image VARCHAR(255),
+			image INT,
 			intro TEXT NOT NULL,
 			description TEXT NOT NULL,
 			creator INT(10) NOT NULL DEFAULT 0,

@@ -9,9 +9,9 @@
 
             <form method="post" action="{{ data.global.base_url }}/recepten/opslaan" id="recipe">
                 <div class="col-md-6">
-                    {% if id %}
+                    {% if data.recipe.id %}
                         <div class="form-group">
-                            <input type="hidden" name="id" id="id" value="{{  data.id }}">
+                            <input type="hidden" name="id" id="id" value="{{  data.recipe.id }}">
                         </div>
                     {% endif %}
                     <div class="form-group">
@@ -25,6 +25,18 @@
                     <div class="form-group">
                         <label for="description">Beschrijving</label>
                         <textarea class="form-control" id="description" name="description" required="required" rows="10">{% if data.recipe.description %}{{ data.recipe.description }}{% endif %}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Afbeelding</label>
+                        <select class="form-control image" name="image">
+                            <option value=""></option>
+                            {% for image in data.image_list %}
+                                <option value="{{ image.id }}"
+                                        {% if data.recipe.image == image.id %}selected="selected"{% endif %}>
+                                    {{ image.title }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                     <button type="submit" class="btn btn-default" onclick="createHiddenDiv();">Opslaan</button>

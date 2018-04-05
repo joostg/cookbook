@@ -28,7 +28,8 @@ class Recipe extends Base
 						id,
 						name,
 						intro,
-						description
+						description,
+						image
                     FROM recipes
                     WHERE id = :id";
 			$stmt = $this->db->prepare($sql);
@@ -50,6 +51,7 @@ class Recipe extends Base
 
 		$data['quantity_list'] = $this->getQuantityList();
 		$data['ingredient_list'] = $this->getIngredientList();
+		$data['image_list'] = $this->getImageList();
 
 		$data['js'][] = '/js/libs/sortable-min.js';
 		$data['js'][] = '/js/recipe.js';
@@ -193,9 +195,16 @@ class Recipe extends Base
 		return $stmt->fetchAll();
 	}
 
-	private function saveImage()
+    public function getImageList()
     {
-        $imageController = new Image($this->ci);
-        $imageController->upload($_FILES);
+        $sql = "SELECT 
+					id, 
+					title
+				FROM images
+				ORDER BY title";
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 }
