@@ -12,6 +12,7 @@ class Home extends Base
 
     public function recipeList()
     {
+        die();
         $sql = "SELECT
                     r.name,
                     r.intro,
