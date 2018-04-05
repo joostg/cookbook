@@ -63,3 +63,16 @@ CREATE TABLE IF NOT EXISTS recipes_ingredients (
 ALTER TABLE recipes_ingredients ADD INDEX recipe_id (recipe_id);
 ALTER TABLE recipes_ingredients ADD INDEX ingredient_id (ingredient_id);
 ALTER TABLE recipes_ingredients ADD INDEX quantity_id (quantity_id);
+
+CREATE TABLE IF NOT EXISTS images (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    path_orig VARCHAR(255) NOT NULL,
+    path_thumb VARCHAR(255),
+    path_recipe_page VARCHAR(255),
+    extension VARCHAR(4),
+    title VARCHAR(255),
+    creator INT(10) NOT NULL DEFAULT 0,
+    modifier INT(10) NOT NULL DEFAULT 0,
+    created DATETIME NOT NULL DEFAULT 0,
+    modified DATETIME NOT NULL DEFAULT 0
+);

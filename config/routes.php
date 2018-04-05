@@ -50,3 +50,6 @@ $app->post('/achterkant/ingredienten/opslaan[/{id}]', \cookbook\backend\classes\
 $app->get('/achterkant/hoeveelheden', \cookbook\backend\classes\Quantity::class .  ':list');
 $app->get('/achterkant/hoeveelheden/wijzigen[/{id}]', \cookbook\backend\classes\Quantity::class .  ':edit');
 $app->post('/achterkant/hoeveelheden/opslaan[/{id}]', \cookbook\backend\classes\Quantity::class . ':save');
+
+$app->get('/achterkant/afbeeldingen', \cookbook\backend\classes\ImageViewer::class .  ':browse');
+$app->post('/achterkant/afbeeldingen/upload', \cookbook\backend\classes\ImageViewer::class .  ':upload');

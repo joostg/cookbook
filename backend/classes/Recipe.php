@@ -192,4 +192,10 @@ class Recipe extends Base
 
 		return $stmt->fetchAll();
 	}
+
+	private function saveImage()
+    {
+        $imageController = new Image($this->ci);
+        $imageController->upload($_FILES);
+    }
 }
