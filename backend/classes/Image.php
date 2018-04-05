@@ -40,9 +40,9 @@ class Image
             return $this->errorMessage;
         }
 
-        if ( !$this->uploadResizedImages() ) {
+/*        if ( !$this->uploadResizedImages() ) {
             return $this->errorMessage;
-        }
+        }*/
 
 
 
@@ -125,22 +125,28 @@ class Image
             $this->errorMessage = 'Failed to move uploaded file.';
             return false;
         } else {
+            // tinyfy
+            \Tinify\setKey($this->ci->get('settings')['tinypng']['apikey']);
+
+            $source = \Tinify\fromFile($path);
+            $source->toFile($path);
+
+            $resized = $source->resize(array(
+                "method" => "cover",
+                "width" => 256,
+                "height" => 192
+            ));
+            $resized->toFile($this->uploadPath . '/' . $this->pathThumb);
+
+            $resized = $source->resize(array(
+                "method" => "cover",
+                "width" => 730,
+                "height" => 548
+            ));
+            $resized->toFile($this->uploadPath . '/' . $this->pathRecipePage);
+
             return true;
         }
-    }
-
-    private function uploadResizedImages()
-    {
-        $thumb = $this->resize_image($this->uploadPath . '/' . $this->pathOriginal, $this->uploadPath . '/' . $this->pathThumb, 255,255,true);
-
-        return true;
-
-        /*if (!move_uploaded_file( $thumb, $this->uploadPath . '/' . $this->pathThumb)) {
-            $this->errorMessage = 'Failed to move uploaded thumbnail.';
-            return false;
-        } else {
-            return true;
-        }*/
     }
 
     private function generateUniquePath()
@@ -207,51 +213,7 @@ class Image
         return $this->db->lastInsertId();
     }
 
-    function generate_image_thumbnail($source_image_path, $thumbnail_image_path)
-    {
-        list($source_image_width, $source_image_height, $source_image_type) = getimagesize($source_image_path);
-        switch ($source_image_type) {
-            case IMAGETYPE_GIF:
-                $source_gd_image = imagecreatefromgif($source_image_path);
-                break;
-            case IMAGETYPE_JPEG:
-                $source_gd_image = imagecreatefromjpeg($source_image_path);
-                break;
-            case IMAGETYPE_PNG:
-                $source_gd_image = imagecreatefrompng($source_image_path);
-                break;
-        }
-        if ($source_gd_image === false) {
-            return false;
-        }
-        $source_aspect_ratio = $source_image_width / $source_image_height;
-        $thumbnail_aspect_ratio = THUMBNAIL_IMAGE_MAX_WIDTH / THUMBNAIL_IMAGE_MAX_HEIGHT;
-        if ($source_image_width <= THUMBNAIL_IMAGE_MAX_WIDTH && $source_image_height <= THUMBNAIL_IMAGE_MAX_HEIGHT) {
-            $thumbnail_image_width = $source_image_width;
-            $thumbnail_image_height = $source_image_height;
-        } elseif ($thumbnail_aspect_ratio > $source_aspect_ratio) {
-            $thumbnail_image_width = (int) (THUMBNAIL_IMAGE_MAX_HEIGHT * $source_aspect_ratio);
-            $thumbnail_image_height = THUMBNAIL_IMAGE_MAX_HEIGHT;
-        } else {
-            $thumbnail_image_width = THUMBNAIL_IMAGE_MAX_WIDTH;
-            $thumbnail_image_height = (int) (THUMBNAIL_IMAGE_MAX_WIDTH / $source_aspect_ratio);
-        }
-        $thumbnail_gd_image = imagecreatetruecolor($thumbnail_image_width, $thumbnail_image_height);
-        imagecopyresampled($thumbnail_gd_image, $source_gd_image, 0, 0, 0, 0, $thumbnail_image_width, $thumbnail_image_height, $source_image_width, $source_image_height);
-
-        $img_disp = imagecreatetruecolor(THUMBNAIL_IMAGE_MAX_WIDTH,THUMBNAIL_IMAGE_MAX_WIDTH);
-        $backcolor = imagecolorallocate($img_disp,0,0,0);
-        imagefill($img_disp,0,0,$backcolor);
-
-        imagecopy($img_disp, $thumbnail_gd_image, (imagesx($img_disp)/2)-(imagesx($thumbnail_gd_image)/2), (imagesy($img_disp)/2)-(imagesy($thumbnail_gd_image)/2), 0, 0, imagesx($thumbnail_gd_image), imagesy($thumbnail_gd_image));
-
-        imagejpeg($img_disp, $thumbnail_image_path, 90);
-        imagedestroy($source_gd_image);
-        imagedestroy($thumbnail_gd_image);
-        imagedestroy($img_disp);
-        return true;
-    }
-
+    // @deprecated since we use tiny png
     function resize_image($file, $save_path, $box_w, $box_h, $crop=FALSE) {
         list($origwidth, $origheight, $source_image_type) = getimagesize($file);
         switch ($source_image_type) {
