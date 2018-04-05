@@ -252,7 +252,7 @@ class Image
         return true;
     }
 
-    function resize_image($file, $save_path, $w, $h, $crop=FALSE) {
+    function resize_image($file, $save_path, $box_w, $box_h, $crop=FALSE) {
         list($origwidth, $origheight, $source_image_type) = getimagesize($file);
         switch ($source_image_type) {
             case IMAGETYPE_GIF:
@@ -269,40 +269,49 @@ class Image
             return false;
         }
 
-        $r = $origwidth / $origheight;
-        $srcX = $srcY = 0;
-        if ($crop) {
-            if ($origwidth > $origheight) {
-                $origwidth = ceil($origwidth-($origwidth*abs($r-$w/$h)));
-            } else {
-                $origheight = ceil($origheight-($origheight*abs($r-$w/$h)));
-            }
-            $newwidth = $w;
-            $newheight = $h;
-
-
-            $heightscale = $origheight / $newheight;
-            $widthscale = $origwidth / $newwidth;
-
-            if ($heightscale > $widthscale) {
-                $srcX = ceil(($origwidth - $w));
-            } else {
-                $srcY = ceil(($origheight - $h));
-            }
-        } else {
-            if ($w/$h > $r) {
-                $newwidth = $h*$r;
-                $newheight = $h;
-            } else {
-                $newheight = $w/$r;
-                $newwidth = $w;
-            }
+        $new = imagecreatetruecolor($box_w, $box_h);
+        if($new === false) {
+            //creation failed -- probably not enough memory
+            return null;
         }
 
-        $dst = imagecreatetruecolor($newwidth, $newheight);
-        imagecopyresampled($dst, $src, 0, 0, $srcX, $srcY, $newwidth, $newheight, $origwidth, $origheight);
-        imagejpeg($dst, $save_path, 90);
+        //Fill the image with a light grey color
+        //(this will be visible in the padding around the image,
+        //if the aspect ratios of the image and the thumbnail do not match)
+        //Replace this with any color you want, or comment it out for black.
+        //I used grey for testing =)
+        $fill = imagecolorallocate($new, 255, 255, 255);
+        imagefill($new, 0, 0, $fill);
 
-        return $dst;
+        //compute resize ratio
+        $hratio = $box_h / imagesy($src);
+        $wratio = $box_w / imagesx($src);
+        $ratio = max($hratio, $wratio);
+
+        //if the source is smaller than the thumbnail size,
+        //don't resize -- add a margin instead
+        //(that is, dont magnify images)
+        if($ratio > 1.0)
+            $ratio = 1.0;
+
+        //compute sizes
+        $sy = floor(imagesy($src) * $ratio);
+        $sx = floor(imagesx($src) * $ratio);
+
+        //compute margins
+        //Using these margins centers the image in the thumbnail.
+        //If you always want the image to the top left,
+        //set both of these to 0
+        $m_y = floor(($box_h - $sy) / 2);
+        $m_x = floor(($box_w - $sx) / 2);
+
+        imagecopyresampled($new, $src,
+            $m_x, $m_y, //dest x, y (margins)
+            0, 0, //src x, y (0,0 means top left)
+            $sx, $sy,//dest w, h (resample to this size (computed above)
+            imagesx($src), imagesy($src)); //src w, h (the full size of the original)
+
+        imagejpeg($new, $save_path, 90);
+        return true;
     }
 }
