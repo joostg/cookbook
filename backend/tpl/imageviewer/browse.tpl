@@ -17,7 +17,7 @@
             {% for image in data.images %}
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                        <img class="card-img-top" src="/pics/{{ image.path_orig }}" height="100" width="225" alt="Card image cap">
+                        <img class="card-img-top" src="/pics/{{ image.path_thumb }}" alt="Card image cap">
                         <div class="card-body">
                             <h3>{{ image.title }}</h3>
                             <p class="card-text">

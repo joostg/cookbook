@@ -6,7 +6,7 @@ class ImageViewer extends Base
     {
         $sql = "SELECT 
 					id,
-					path_orig,
+					path_thumb,
 					title
 				FROM images
 				ORDER BY created ASC";

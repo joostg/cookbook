@@ -40,6 +40,12 @@ class Image
             return $this->errorMessage;
         }
 
+        if ( !$this->uploadResizedImages() ) {
+            return $this->errorMessage;
+        }
+
+
+
         // @TODO: generate thumbnail and resized recipe page image
 
         $insertId = $this->saveToDb($title);
@@ -123,16 +129,35 @@ class Image
         }
     }
 
+    private function uploadResizedImages()
+    {
+        $thumb = $this->resize_image($this->uploadPath . '/' . $this->pathOriginal, $this->uploadPath . '/' . $this->pathThumb, 255,255,true);
+
+        return true;
+
+        /*if (!move_uploaded_file( $thumb, $this->uploadPath . '/' . $this->pathThumb)) {
+            $this->errorMessage = 'Failed to move uploaded thumbnail.';
+            return false;
+        } else {
+            return true;
+        }*/
+    }
+
     private function generateUniquePath()
     {
         $filenameHash = md5(uniqid($this->imageFile['image']["name"], true));
         $this->pathOriginal = $filenameHash . '.' . $this->extension;;
+        $this->pathThumb = $filenameHash . '_thumb.' . $this->extension;;
+        $this->pathRecipePage = $filenameHash . '_recipe_page.' . $this->extension;;
         $path = $this->uploadPath . $this->pathOriginal;
 
         // check if file doesn't exist yet
         $incr = 0;
         while(file_exists($path)){
-            $this->pathOriginal = $filenameHash . '_' . $incr . '.' . $this->extension;;
+            $this->pathOriginal = $filenameHash . '_' . $incr . '.' . $this->extension;
+            $this->pathThumb = $filenameHash . '_' . $incr . '_thumb.' . $this->extension;
+            $this->pathRecipePage  = $filenameHash . '_' . $incr . '_recipe_page.' . $this->extension;
+
             $path = $this->uploadPath . '/' . $this->pathOriginal;
             $incr++;
         }
@@ -225,5 +250,59 @@ class Image
         imagedestroy($thumbnail_gd_image);
         imagedestroy($img_disp);
         return true;
+    }
+
+    function resize_image($file, $save_path, $w, $h, $crop=FALSE) {
+        list($origwidth, $origheight, $source_image_type) = getimagesize($file);
+        switch ($source_image_type) {
+            case IMAGETYPE_GIF:
+                $src = imagecreatefromgif($file);
+                break;
+            case IMAGETYPE_JPEG:
+                $src = imagecreatefromjpeg($file);
+                break;
+            case IMAGETYPE_PNG:
+                $src = imagecreatefrompng($file);
+                break;
+        }
+        if ($src === false) {
+            return false;
+        }
+
+        $r = $origwidth / $origheight;
+        $srcX = $srcY = 0;
+        if ($crop) {
+            if ($origwidth > $origheight) {
+                $origwidth = ceil($origwidth-($origwidth*abs($r-$w/$h)));
+            } else {
+                $origheight = ceil($origheight-($origheight*abs($r-$w/$h)));
+            }
+            $newwidth = $w;
+            $newheight = $h;
+
+
+            $heightscale = $origheight / $newheight;
+            $widthscale = $origwidth / $newwidth;
+
+            if ($heightscale > $widthscale) {
+                $srcX = ceil(($origwidth - $w));
+            } else {
+                $srcY = ceil(($origheight - $h));
+            }
+        } else {
+            if ($w/$h > $r) {
+                $newwidth = $h*$r;
+                $newheight = $h;
+            } else {
+                $newheight = $w/$r;
+                $newwidth = $w;
+            }
+        }
+
+        $dst = imagecreatetruecolor($newwidth, $newheight);
+        imagecopyresampled($dst, $src, 0, 0, $srcX, $srcY, $newwidth, $newheight, $origwidth, $origheight);
+        imagejpeg($dst, $save_path, 90);
+
+        return $dst;
     }
 }
