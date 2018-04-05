@@ -118,8 +118,8 @@ class Image
 
             $resized = $source->resize(array(
                 "method" => "cover",
-                "width" => 256,
-                "height" => 192
+                "width" => 348,
+                "height" => 261
             ));
             $resized->toFile($this->uploadPath . '/' . $this->pathThumb);
 

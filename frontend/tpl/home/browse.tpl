@@ -14,7 +14,8 @@
             {% for recipe in recipes %}
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
-                        <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=onsreceptenboek.nl" alt="Card image cap">
+                        <img class="card-img-top" data-src="holder.js/348x261?theme=thumb&bg=55595c&fg=eceeef&text=onsreceptenboek.nl" alt="Card image cap">
+                        {#<img class="card-img-top" src="/pics/c55c21d0dc0a1e6005a72903981c2420_thumb.png" alt="Card image cap">#}
                         <div class="card-body">
                             <h3>{{ recipe.name }}</h3>
                             <p class="card-text">
