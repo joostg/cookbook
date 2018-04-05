@@ -12,7 +12,6 @@ class Image
     private $errorMessage;
     private $extension;
 
-    private $pathOriginal = '';
     private $pathThumb = '';
     private $pathRecipePage = '';
 
@@ -116,7 +115,6 @@ class Image
             \Tinify\setKey($this->ci->get('settings')['tinypng']['apikey']);
 
             $source = \Tinify\fromFile($path);
-            $source->toFile($path);
 
             $resized = $source->resize(array(
                 "method" => "cover",
@@ -139,19 +137,19 @@ class Image
     private function generateUniquePath()
     {
         $filenameHash = md5(uniqid($this->imageFile['image']["name"], true));
-        $this->pathOriginal = $filenameHash . '.' . $this->extension;;
+
+        $this->pathRecipePage = $filenameHash . '.' . $this->extension;;
         $this->pathThumb = $filenameHash . '_thumb.' . $this->extension;;
-        $this->pathRecipePage = $filenameHash . '_recipe_page.' . $this->extension;;
-        $path = $this->uploadPath . $this->pathOriginal;
+
+        $path = $this->uploadPath . $this->pathRecipePage;
 
         // check if file doesn't exist yet
         $incr = 0;
         while(file_exists($path)){
-            $this->pathOriginal = $filenameHash . '_' . $incr . '.' . $this->extension;
             $this->pathThumb = $filenameHash . '_' . $incr . '_thumb.' . $this->extension;
-            $this->pathRecipePage  = $filenameHash . '_' . $incr . '_recipe_page.' . $this->extension;
+            $this->pathRecipePage  = $filenameHash . '_' . $incr . '.' . $this->extension;
 
-            $path = $this->uploadPath . '/' . $this->pathOriginal;
+            $path = $this->uploadPath . '/' . $this->pathRecipePage;
             $incr++;
         }
 
@@ -162,7 +160,6 @@ class Image
     {
         $insert = $this->db->prepare(
             "INSERT INTO images (
-                `path_orig`,
                 `path_thumb`,
                 `path_recipe_page`,
                 `extension`,
@@ -172,7 +169,6 @@ class Image
                 `modified`,
                 `modifier`
             ) VALUES (
-                :path_orig,
                 :path_thumb,
                 :path_recipe_page,
                 :extension,
@@ -184,7 +180,6 @@ class Image
             )"
         );
         $insert->execute(array(
-            'path_orig' => $this->pathOriginal,
             'path_thumb' => $this->pathThumb,
             'path_recipe_page' => $this->pathRecipePage,
             'extension' => $this->extension,

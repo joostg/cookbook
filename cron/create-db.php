@@ -66,7 +66,6 @@ ALTER TABLE recipes_ingredients ADD INDEX quantity_id (quantity_id);
 
 CREATE TABLE IF NOT EXISTS images (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    path_orig VARCHAR(255) NOT NULL,
     path_thumb VARCHAR(255),
     path_recipe_page VARCHAR(255),
     extension VARCHAR(4),
