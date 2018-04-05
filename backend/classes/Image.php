@@ -7,7 +7,7 @@ class Image
     protected $db;
     protected $slugify;
 
-    private $uploadPath = '/var/www/html/cookbook/web/pics/';
+    private $uploadPath;
     private $imageFile;
     private $errorMessage;
     private $extension;
@@ -22,6 +22,7 @@ class Image
         $this->db = $this->ci->get('db');
         $this->slugify = $this->ci->get('slugify');
         $this->baseUrl = $this->ci->get('settings')->get('base_url');
+        $this->uploadPath = $this->ci->get('settings')->get('pictures_path');
     }
     
     public function saveRecipeImage($imageFile, $title)
@@ -39,14 +40,6 @@ class Image
         if ( !$this->uploadImage() ) {
             return $this->errorMessage;
         }
-
-/*        if ( !$this->uploadResizedImages() ) {
-            return $this->errorMessage;
-        }*/
-
-
-
-        // @TODO: generate thumbnail and resized recipe page image
 
         $insertId = $this->saveToDb($title);
         if ( !$insertId ) {
@@ -87,12 +80,6 @@ class Image
                 $this->errorMessage = 'Unknown errors.';
                 return false;
         }
-
-        /*$max = ini_get('upload_max_filesize') * 1000 * 1000;
-        if ( $this->imageFile['image']['size'] > $max ) {
-            $this->errorMessage = 'Exceeded filesize limit.';
-            return false;
-        }*/
 
         return true;
     }
