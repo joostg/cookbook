@@ -65,11 +65,6 @@ class Recipe extends Base
 
 		$path = $this->slugify->slugify($post['name']);
 
-		// todo: replace this with wysiwyg editor
-		$description = '<p>' . str_replace('
-
-','</p><p>', $post['description']) . '</p>' ;
-
 		if ($post['id']) {
 			$id = $post['id'];
 			$sql = "UPDATE recipes
@@ -85,7 +80,7 @@ class Recipe extends Base
 				'name' => $post['name'],
 				'path' => $path,
 				'intro' => $post['intro'],
-				'description' => $description,
+				'description' => $post['description'],
 				'image' => $post['image'],
 				'id' => $id,
 			]);

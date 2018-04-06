@@ -1,9 +1,11 @@
 $('document').ready(function() {
+   /* $('#editor').wysiwyg().html($('#description').val());*/
+
     var el = document.getElementById('ingredients');
-    Sortable.create(el/*,  {
-        handle: '.fa-arrows-alt',
+    Sortable.create(el,  {
+        handle: '.move-ingredient',
         animation: 150,
-    }*/);
+    });
 
     $('.add-ingredient').on('click', function() {
         var container = document.createElement("div");
@@ -12,12 +14,14 @@ $('document').ready(function() {
     });
 
 
-    $(document).on('click', '.glyphicon-remove', function() {
-        $(this).closest('.row').remove();
+    $('.delete-ingredient').on('click', function() {
+        $(this).closest('.ingredient-row').remove();
     });
 });
 
 function createHiddenDiv() {
+    /*$('#description').val($('#editor').html());*/
+
     var form = document.getElementById("recipe");
     var i = 1;
 

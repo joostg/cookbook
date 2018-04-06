@@ -26,7 +26,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="description">Beschrijving</label>
-                                <textarea class="form-control" id="description" name="description" required="required" rows="10">{% if data.recipe.description %}{{ data.recipe.description }}{% endif %}</textarea>
+                                <textarea  class="form-control" id="description" name="description" required="required" rows="10">{% if data.recipe.description %}{{ data.recipe.description }}{% endif %}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="image">Afbeelding</label>
@@ -41,72 +41,75 @@
                                 </select>
                             </div>
 
-                            <button type="submit" class="btn btn-default" onclick="createHiddenDiv();">Opslaan</button>
+                            <button type="submit" class="btn btn-primary" onclick="createHiddenDiv();">Opslaan</button>
                         </div>
 
-                        <div class="col-md-6 form-group" id="ingredients">
-                            {% if data.ingredients %}
-                                {% for ingredientrow in data.ingredients %}
-                                    <div class="form-row">
-                                        <div class="col-xs-1 col-sm-1">
-                                            <i class="fas fa-arrows-alt"></i>
-                                        </div>
-                                        <div class="col-xs-4 col-sm-3">
-                                            <label class="sr-only" for="quantity">Hoeveelheid</label>
-                                            <input type="number" min="0.00" class="form-control quantity" value="{{ ingredientrow.quantity }}">
-                                        </div>
-                                        <div class="col-xs-6 col-sm-3">
-                                            <label class="sr-only" for="quantity_id">Kwantiteit</label>
-                                            <select class="form-control quantity_id">
-                                                <option value=""></option>
-                                                {% for quantity in data.quantity_list %}
-                                                    <option value="{{ quantity.id }}"
-                                                    {% if ingredientrow.quantity_id == quantity.id %}selected="selected"{% endif %}>
-                                                        {{ quantity.name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <div class="col-xs-10 col-sm-4">
-                                            <label class="sr-only" for="ingredient_id">Ingrediënt</label>
-                                            <select class="form-control ingredient_id">
-                                                <option value=""></option>
-                                                {% for ingredient in data.ingredient_list %}
-                                                    <option value="{{ ingredient.id }}"
-                                                            {% if ingredientrow.ingredient_id == ingredient.id %}selected="selected"{% endif %}>
-                                                        {{ ingredient.name }}
-                                                    </option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <div class="col-xs-1 col-sm-1">
-                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
+                        <div class="col-md-6 form-group">
+                            <button type="button" class="btn btn-primary add-ingredient" aria-label="Left Align">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ingrediënt toevoegen
+                            </button>
 
-                        <button type="button" class="btn btn-default add-ingredient" aria-label="Left Align">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ingrediënt toevoegen
-                        </button>
+                            <hr>
+
+                            <div id="ingredients">
+                                {% if data.ingredients %}
+                                    {% for ingredientrow in data.ingredients %}
+                                        <div class="form-row ingredient-row">
+                                            <div class="form-group col-xs-1 col-sm-1">
+                                                <i class="fas fa-arrows-alt move-ingredient"></i>
+                                            </div>
+                                            <div class="form-group col-xs-4 col-sm-3">
+                                                <label class="sr-only" for="quantity">Hoeveelheid</label>
+                                                <input type="number" min="0.00" class="form-control quantity" value="{{ ingredientrow.quantity }}">
+                                            </div>
+                                            <div class="form-group col-xs-6 col-sm-3">
+                                                <label class="sr-only" for="quantity_id">Kwantiteit</label>
+                                                <select class="form-control quantity_id">
+                                                    <option value=""></option>
+                                                    {% for quantity in data.quantity_list %}
+                                                        <option value="{{ quantity.id }}"
+                                                        {% if ingredientrow.quantity_id == quantity.id %}selected="selected"{% endif %}>
+                                                            {{ quantity.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-xs-10 col-sm-4">
+                                                <label class="sr-only" for="ingredient_id">Ingrediënt</label>
+                                                <select class="form-control ingredient_id">
+                                                    <option value=""></option>
+                                                    {% for ingredient in data.ingredient_list %}
+                                                        <option value="{{ ingredient.id }}"
+                                                                {% if ingredientrow.ingredient_id == ingredient.id %}selected="selected"{% endif %}>
+                                                            {{ ingredient.name }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-xs-1 col-sm-1">
+                                                <i class="fas fa-trash-alt delete-ingredient"></i>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    {% set ingredientRow %}
-        <div class="form-row">
+    {% set ingredientRow %}<div class="form-row ingredient-row">
         <div class="form-group col-xs-1 col-sm-1">
-            <i class="fas fa-arrows-alt"></i>
+            <i class="fas fa-arrows-alt move-ingredient"></i>
         </div>
         <div class="form-group col-xs-4 col-sm-3">
-            <label for="quantity">Hoeveelheid</label>
+            <label class="sr-only" for="quantity">Hoeveelheid</label>
             <input type="number" min="0.00" class="form-control quantity">
         </div>
         <div class="form-group col-xs-6 col-sm-3">
-            <label for="quantity_id">Kwantiteit</label>
+            <label class="sr-only" for="quantity_id">Kwantiteit</label>
             <select class="form-control quantity_id">
                 <option value=""></option>
                 {% for quantity in data.quantity_list %}
@@ -115,7 +118,7 @@
             </select>
         </div>
         <div class="form-group col-xs-10 col-sm-4">
-            <label for="ingredient_id">Ingrediënt</label>
+            <label class="sr-only" for="ingredient_id">Ingrediënt</label>
             <select class="form-control ingredient_id">
                 <option value=""></option>
                 {% for ingredient in data.ingredient_list %}
@@ -124,7 +127,7 @@
             </select>
         </div>
         <div class="form-group col-xs-1 col-sm-1">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <i class="fas fa-trash-alt delete-ingredient"></i>
         </div>
     </div>{% endset %}
 
