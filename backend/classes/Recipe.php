@@ -59,6 +59,28 @@ class Recipe extends Base
 		return $this->render($response, $data);
 	}
 
+    public function delete($request, $response, $args)
+    {
+        $data = array();
+        if (array_key_exists('id', $args)) {
+            $data['id'] = $args['id'];
+
+            $sql = "DELETE
+                    FROM recipes
+                    WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute(["id" => $args['id']]);
+
+            $sql = "DELETE
+                    FROM recipes_ingredients
+                    WHERE recipe_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute(["id" => $args['id']]);
+        }
+
+        return $response->withHeader('Location', $this->baseUrl . '/recepten');
+    }
+
 	public function save($request, $response, $args)
 	{
 		$post = $request->getParsedBody();

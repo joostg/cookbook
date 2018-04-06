@@ -39,6 +39,28 @@ class Ingredient extends Base
 		return $this->render($response, $data);
 	}
 
+    public function delete($request, $response, $args)
+    {
+        $data = array();
+        if (array_key_exists('id', $args)) {
+            $data['id'] = $args['id'];
+
+            $sql = "DELETE
+                    FROM ingredients
+                    WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute(["id" => $args['id']]);
+
+            $sql = "DELETE
+                    FROM recipes_ingredients
+                    WHERE ingredient_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute(["id" => $args['id']]);
+        }
+
+        return $response->withHeader('Location', $this->baseUrl . '/ingredienten');
+    }
+
 	public function save($request, $response, $args)
 	{
 		$post = $request->getParsedBody();

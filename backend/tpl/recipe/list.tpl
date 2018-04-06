@@ -18,13 +18,13 @@
                     <th>Wijzigen</th>
                     <th>Recept</th>
                     <th>Aangemaakt</th>
+                    <th>Verwijderen</th>
                 </tr>
                {% for recipe in data.recipes %}
                    <tr>
                        <td>
                            <a href="{{ data.global.base_url }}/recepten/wijzigen/{{ recipe.id }}">
-                               <span class="glyphicon glyphicon-pencil"></span>
-                               wijzigen
+                               <i class="fas fa-edit "></i>
                            </a>
                        </td>
                        <td>
@@ -32,6 +32,12 @@
                        </td>
                        <td>
                            {{ recipe.created }}
+                       </td>
+                       <td>
+                           <a href="{{ data.global.base_url }}/recepten/verwijderen/{{ recipe.id }}"
+                              onclick="return confirm('Weet je zeker dat je recept `{{ recipe.name }}` wilt verwijderen?')">
+                               <i class="fas fa-trash "></i>
+                           </a>
                        </td>
                    </tr>
                {% endfor %}

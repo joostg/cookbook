@@ -39,6 +39,28 @@ class Quantity extends Base
 		return $this->render($response, $data);
 	}
 
+    public function delete($request, $response, $args)
+    {
+        $data = array();
+        if (array_key_exists('id', $args)) {
+            $data['id'] = $args['id'];
+
+            $sql = "DELETE
+                    FROM quantities
+                    WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute(["id" => $args['id']]);
+
+            $sql = "UPDATE recipes_ingredients
+                    SET quantity_id = NULL            
+                    WHERE quantity_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $result = $stmt->execute(["id" => $args['id']]);
+        }
+
+        return $response->withHeader('Location', $this->baseUrl . '/hoeveelheden');
+    }
+
 	public function save($request, $response, $args)
 	{
 		$post = $request->getParsedBody();

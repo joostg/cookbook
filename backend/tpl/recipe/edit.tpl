@@ -31,7 +31,7 @@
                             <div class="form-group">
                                 <label for="image">Afbeelding</label>
                                 <select class="form-control image" name="image">
-                                    <option value=""></option>
+                                    <option value="0"></option>
                                     {% for image in data.image_list %}
                                         <option value="{{ image.id }}"
                                                 {% if data.recipe.image == image.id %}selected="selected"{% endif %}>

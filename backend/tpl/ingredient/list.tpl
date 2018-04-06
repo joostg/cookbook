@@ -17,12 +17,13 @@
                     <th>Wijzigen</th>
                     <th>Ingrediënt</th>
                     <th>Meervoud</th>
+                    <th>Verwijderen</th>
                 </tr>
                {% for ingredient in data.ingredients %}
                    <tr>
                        <td>
                            <a href="{{ data.global.base_url }}/ingredienten/wijzigen/{{ ingredient.id }}">
-                                <span class="glyphicon glyphicon-pencil"></span>
+                                <i class="fas fa-edit "></i>
                            </a>
                        </td>
                        <td>
@@ -30,6 +31,12 @@
                        </td>
                        <td>
                            {{ ingredient.plural }}
+                       </td>
+                       <td>
+                           <a href="{{ data.global.base_url }}/ingredienten/verwijderen/{{ ingredient.id }}"
+                              onclick="return confirm('Weet je zeker dat je ingredient `{{ ingredient.name }}` wilt verwijderen?')">
+                               <i class="fas fa-trash "></i>
+                           </a>
                        </td>
                    </tr>
                {% endfor %}

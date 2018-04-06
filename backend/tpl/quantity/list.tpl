@@ -17,13 +17,13 @@
                     <th>Wijzigen</th>
                     <th>Hoeveelheid</th>
                     <th>Meervoud</th>
+                    <th>Verwijderen</th>
                 </tr>
                {% for quantity in data.quantities %}
                    <tr>
                        <td>
                            <a href="{{ data.global.base_url }}/hoeveelheden/wijzigen/{{ quantity.id }}">
-                                <span class="glyphicon glyphicon-pencil"></span>
-                               wijzigen
+                               <i class="fas fa-edit "></i>
                            </a>
                        </td>
                        <td>
@@ -31,6 +31,12 @@
                        </td>
                        <td>
                            {{ quantity.plural }}
+                       </td>
+                       <td>
+                           <a href="{{ data.global.base_url }}/hoeveelheden/verwijderen/{{ quantity.id }}"
+                              onclick="return confirm('Weet je zeker dat je hoeveelheid `{{ quantity.name }}` wilt verwijderen?')">
+                               <i class="fas fa-trash "></i>
+                           </a>
                        </td>
                    </tr>
                {% endfor %}

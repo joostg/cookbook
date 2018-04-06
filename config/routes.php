@@ -36,6 +36,7 @@ $app->get('/achterkant/logout', \cookbook\backend\classes\User::class . ':logout
  * =============== */
 $app->get('/achterkant/recepten', \cookbook\backend\classes\Recipe::class . ':list');
 $app->get('/achterkant/recepten/wijzigen[/{id}]', \cookbook\backend\classes\Recipe::class . ':edit');
+$app->get('/achterkant/recepten/verwijderen[/{id}]', \cookbook\backend\classes\Recipe::class . ':delete');
 $app->post('/achterkant/recepten/opslaan[/{id}]', \cookbook\backend\classes\Recipe::class . ':save');
 
 /* ===================
@@ -43,6 +44,7 @@ $app->post('/achterkant/recepten/opslaan[/{id}]', \cookbook\backend\classes\Reci
  * =================== */
 $app->get('/achterkant/ingredienten', \cookbook\backend\classes\Ingredient::class . ':list');
 $app->get('/achterkant/ingredienten/wijzigen[/{id}]', \cookbook\backend\classes\Ingredient::class . ':edit');
+$app->get('/achterkant/ingredienten/verwijderen[/{id}]', \cookbook\backend\classes\Ingredient::class . ':delete');
 $app->post('/achterkant/ingredienten/opslaan[/{id}]', \cookbook\backend\classes\Ingredient::class . ':save');
 
 /* ==================
@@ -50,6 +52,7 @@ $app->post('/achterkant/ingredienten/opslaan[/{id}]', \cookbook\backend\classes\
  * ================== */
 $app->get('/achterkant/hoeveelheden', \cookbook\backend\classes\Quantity::class .  ':list');
 $app->get('/achterkant/hoeveelheden/wijzigen[/{id}]', \cookbook\backend\classes\Quantity::class .  ':edit');
+$app->get('/achterkant/hoeveelheden/verwijderen[/{id}]', \cookbook\backend\classes\Quantity::class . ':delete');
 $app->post('/achterkant/hoeveelheden/opslaan[/{id}]', \cookbook\backend\classes\Quantity::class . ':save');
 
 $app->get('/achterkant/afbeeldingen', \cookbook\backend\classes\ImageViewer::class .  ':browse');
