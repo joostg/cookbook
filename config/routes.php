@@ -61,4 +61,5 @@ $app->get('/achterkant/hoeveelheden/verwijderen[/{id}]', \cookbook\backend\class
 $app->post('/achterkant/hoeveelheden/opslaan[/{id}]', \cookbook\backend\classes\Quantity::class . ':save');
 
 $app->get('/achterkant/afbeeldingen', \cookbook\backend\classes\ImageViewer::class .  ':browse');
+$app->get('/achterkant/afbeeldingen/verwijderen[/{id}]', \cookbook\backend\classes\ImageViewer::class . ':delete');
 $app->post('/achterkant/afbeeldingen/upload', \cookbook\backend\classes\ImageViewer::class .  ':upload');

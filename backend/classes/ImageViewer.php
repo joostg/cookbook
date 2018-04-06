@@ -26,4 +26,31 @@ class ImageViewer extends Base
 
         return $response->withHeader('Location', $this->baseUrl . '/afbeeldingen');
     }
+
+    public function delete($request, $response, $args)
+    {
+        if (array_key_exists('id', $args)) {
+            $id = $args['id'];
+
+            $select = $this->db->prepare(
+                "SELECT path_thumb, path_recipe_page FROM images WHERE id = ?"
+            );
+            $select->execute(array($id));
+
+            $imageFiles = $select->fetch();
+            $uploadPath = $this->ci->get('settings')->get('pictures_path');
+
+            foreach ($imageFiles as $imageFile) {
+                $fullPath = $uploadPath . $imageFile;
+                unlink($fullPath);
+            }
+
+            $delete = $this->db->prepare(
+                "DELETE FROM images WHERE id = ?"
+            );
+            $delete->execute(array($id));
+        }
+
+        return $response->withHeader('Location', $this->baseUrl . '/afbeeldingen');
+    }
 }

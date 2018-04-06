@@ -6,7 +6,7 @@
     <div class="container theme-showcase" role="main">
         <div class="col-md-12">
             <h1>Afbeelingen</h1>
-            <form id="productimg" name="upload" method="POST" enctype="multipart/form-data" action="/achterkant/afbeeldingen/upload">
+            <form id="productimg" name="upload" method="POST" enctype="multipart/form-data" action="{{ data.global.base_url }}/afbeeldingen/upload">
                 Afbeelding uploaden: <input type="file" name="image" id="uploadimg" required>
                 Titel <input type="text" name="title" id="title" required>
                 <input type="submit" name="upload" value="upload" id="upload">
@@ -20,13 +20,9 @@
                         <img class="card-img-top" src="/pics/{{ image.path_thumb }}" alt="Card image cap">
                         <div class="card-body">
                             <h3>{{ image.title }}</h3>
-                            <p class="card-text">
-                                {{ recipe.intro }}
-                            </p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a type="button" class="btn btn-sm btn-outline-secondary" href="/recept/{{ recipe.path }}">Bekijken</a>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                                    <a type="button" class="btn btn-sm btn-outline-secondary"  href="{{ data.global.base_url }}/afbeeldingen/verwijderen/{{ image.id }}">Verwijderen</a>
                                 </div>
                                 <small class="text-muted">{{ image.created|date('d-m-Y H:i:s') }}</small>
                             </div>
