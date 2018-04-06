@@ -4,12 +4,6 @@
 
 {% block content %}
     <div class="container theme-showcase" role="main">
-        <!-- Main jumbotron for a primary marketing message or call to action -->
-        <div class="jumbotron">
-            <h2>Cookbook.dev</h2>
-            <p>Tekst ter introductie.</p>
-        </div>
-
         <div class="row">
             {% for recipe in recipes %}
                 <div class="col-md-4">
