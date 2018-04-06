@@ -11,12 +11,14 @@
             </a>
         </div>
 
-        <div class="col-md-6">
-            <table class="table">
+        <div class="col-md-12">
+            <table class="table table-striped">
                 <tr>
                     <th>Wijzigen</th>
                     <th>Ingrediënt</th>
                     <th>Meervoud</th>
+                    <th>Gewijzigd</th>
+                    <th>Gewijzigd door</th>
                     <th>Verwijderen</th>
                 </tr>
                {% for ingredient in data.ingredients %}
@@ -32,6 +34,8 @@
                        <td>
                            {{ ingredient.plural }}
                        </td>
+                       <td>{% if ingredient.modified %}{{ ingredient.modified|date('d-m-Y H:i:s') }}{% endif %}</td>
+                       <td>{{ ingredient.modifier }}</td>
                        <td>
                            <a href="{{ data.global.base_url }}/ingredienten/verwijderen/{{ ingredient.id }}"
                               onclick="return confirm('Weet je zeker dat je ingredient `{{ ingredient.name }}` wilt verwijderen?')">

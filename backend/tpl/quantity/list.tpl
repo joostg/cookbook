@@ -11,12 +11,14 @@
             </a>
         </div>
 
-        <div class="col-md-6">
-            <table class="table">
+        <div class="col-md-12">
+            <table class="table table-striped">
                 <tr>
                     <th>Wijzigen</th>
                     <th>Hoeveelheid</th>
                     <th>Meervoud</th>
+                    <th>Gewijzigd</th>
+                    <th>Gewijzigd door</th>
                     <th>Verwijderen</th>
                 </tr>
                {% for quantity in data.quantities %}
@@ -32,6 +34,8 @@
                        <td>
                            {{ quantity.plural }}
                        </td>
+                       <td>{% if quantity.modified %}{{ quantity.modified|date('d-m-Y H:i:s') }}{% endif %}</td>
+                       <td>{{ quantity.modifier }}</td>
                        <td>
                            <a href="{{ data.global.base_url }}/hoeveelheden/verwijderen/{{ quantity.id }}"
                               onclick="return confirm('Weet je zeker dat je hoeveelheid `{{ quantity.name }}` wilt verwijderen?')">

@@ -50,6 +50,11 @@ $container['db'] = function ($c) {
 	return $pdo;
 };
 
+// Register provider
+$container['flash'] = function () {
+    return new \Slim\Flash\Messages();
+};
+
 // Add slugify for pathnames
 $container['slugify'] = function ($c) {
 	$slugify = new Cocur\Slugify\Slugify;

@@ -25,17 +25,32 @@ create table logins (
 );
 create index attempted_idx	on logins (attempted);
 
+DROP TABLE ingredients;
+DROP TABLE quantities;
+TRUNCATE TABLE recipes_ingredients;
+
 CREATE TABLE IF NOT EXISTS ingredients (
 			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 			name VARCHAR(50) NOT NULL,
-			plural VARCHAR(50)
+			plural VARCHAR(50),
+            department INT,
+            creator INT(10) NOT NULL DEFAULT 0,
+			modifier INT(10) NOT NULL DEFAULT 0,
+			created DATETIME NOT NULL DEFAULT 0,
+			modified DATETIME NOT NULL DEFAULT 0
 		);
+ALTER TABLE ingredients ADD UNIQUE INDEX name (name);
 
 CREATE TABLE IF NOT EXISTS quantities (
 			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 			name VARCHAR(50) NOT NULL,
-			plural VARCHAR(50)
+			plural VARCHAR(50),
+			creator INT(10) NOT NULL DEFAULT 0,
+			modifier INT(10) NOT NULL DEFAULT 0,
+			created DATETIME NOT NULL DEFAULT 0,
+			modified DATETIME NOT NULL DEFAULT 0
 		);
+ALTER TABLE quantities ADD UNIQUE INDEX name (name);
 
 CREATE TABLE IF NOT EXISTS recipes (
 			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

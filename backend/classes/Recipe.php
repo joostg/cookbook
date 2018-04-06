@@ -5,10 +5,10 @@ class Recipe extends Base
 	public function list($request, $response, $args)
 	{
 		$sql = "SELECT 
-					id,
-					name,
-					created
-				FROM recipes
+					r.*,
+					u.user AS modifier
+				FROM recipes r
+				LEFT JOIN users u ON u.id = r.modifier
 				ORDER BY name";
 		$stmt = $this->db->prepare($sql);
 		$result = $stmt->execute();

@@ -5,10 +5,10 @@ class Ingredient extends Base
 	public function list($request, $response, $args)
 	{
 		$sql = "SELECT 
-					id,
-					name,
-					plural
-				FROM ingredients
+					i.*,
+					u.user AS modifier
+				FROM ingredients i
+				LEFT JOIN users u ON u.id = i.modifier
 				ORDER BY name";
 		$stmt = $this->db->prepare($sql);
 		$result = $stmt->execute();
@@ -65,6 +65,8 @@ class Ingredient extends Base
 	{
 		$post = $request->getParsedBody();
 
+        $user = $_SESSION['user']['id'];
+
 		$plural = NULL;
 		if ($post['plural'] != '') {
 			$plural = $post['plural'];
@@ -76,27 +78,39 @@ class Ingredient extends Base
 			$sql = "UPDATE ingredients
 					SET 
 						name = :name,
-						plural = :plural
+						plural = :plural,
+						modified = NOW(),
+						modifier = :user_id
 					WHERE id = :id";
 			$stmt = $stmt = $this->db->prepare($sql);
 			$result = $stmt->execute([
 				'name' => $post['name'],
 				'plural' => $plural,
 				'id' => $id,
+                'user_id' => $user,
 			]);
 		} else {
 			$sql = "INSERT INTO ingredients (
 						name,
-						plural
+						plural,
+						created,
+						modified,
+						creator,
+						modifier
 					) VALUES (
 						:name,
-						:plural
+						:plural,
+						NOW(),
+						NOW(),
+						:user_id,
+						:user_id
 					)";
 			$stmt = $stmt = $this->db->prepare($sql);
-			$result = $stmt->execute([
-				'name' => $post['name'],
-				'plural' => $plural,
-			]);
+            $result = $stmt->execute([
+                'name' => $post['name'],
+                'plural' => $plural,
+                'user_id' => $user,
+            ]);
 		}
 
 		return $response->withHeader('Location', $this->baseUrl . '/ingredienten');
