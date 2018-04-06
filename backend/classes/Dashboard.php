@@ -4,7 +4,7 @@ class Dashboard extends Base
 {
     public function browse($request, $response, $args)
     {
-        $data['user'] = $_SESSION['user'];
+        $data['user'] = $_SESSION['user']['user'];
 
 		return $this->render($response, $data);
     }

@@ -9,7 +9,7 @@ require '../config/config.php';
 
 $app = new \Slim\App(["settings" => $config]);
 
-session_name('cookbook');
+session_name('onsreceptenboek');
 session_set_cookie_params(86400);
 session_start();
 

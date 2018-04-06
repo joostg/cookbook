@@ -4,53 +4,71 @@ class User extends Base
 {
     public function login($request, $response, $args)
     {
-        /*$insert = $this->db->prepare("INSERT INTO users (user, hash) VALUES (?,?)");
-        $insert->execute(array(
-           'joost',password_hash('banaan',PASSWORD_DEFAULT)
-        ));*/
-
-        // Attempt to restore logged in user from cookie first. If successful redirect to returnUrl
-        if ($this->restoreCookie()) {
-            return $response->withHeader('Location', $this->getReturnUri());
-        }
-
 		return $this->render($response, array());
     }
 
     public function authenticate($request, $response, $args)
     {
-        $email = $request->getParam('user');
+        $username = $request->getParam('user');
         $pass = $request->getParam('pass');
 
-        if ($pass || $email) {
-            $sql = "SELECT hash
-                    FROM users
-                    WHERE user = :user";
-            $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute(["user" => $email]);
+        if ($pass || $username) {
+            $remaining_delay = $this->getRemainingDelay($username);
 
-            if ($result) {
-                $hash = $stmt->fetch();
+            if ($remaining_delay > 0) {
+                $errorMsg = 'Probeer het over ' . $remaining_delay . ' seconden nogmaals';
+            } else {
+                $user = $this->verifyPassword($username, $pass);
 
-                if (password_verify($pass, $hash['hash'])) {
-                    $_SESSION['user'] = $email;
+                if ($user) {
+                    unset($user['hash']);
+                    $_SESSION['user'] = $user;
+
+                    $this->createCookie($user['id']);
 
                     return $response->withHeader('Location', $this->getReturnUri());
                 }
+
+                $errorMsg = 'Ongeldige gebruikersnaam / wachtwoord opgegeven, probeer het opnieuw.';
             }
         }
-    
+
         return $response->withHeader('Location', $this->baseUrl . '/login');
+    }
+
+    private function verifyPassword($username, $password)
+    {
+        $select = $this->db->prepare("SELECT * FROM users WHERE user = :username");
+        $select->execute(array(
+            'username' => $username,
+        ));
+        $result = $select->fetch();
+
+        // verify credentials
+        if ($result) {
+            if (password_verify($password, $result['hash'])) {
+                $this->logLogin($password, 1);
+                return $result;
+            }
+        }
+
+        $this->logLogin($username, 0);
+        return false;
     }
 
     public function logout($request, $response, $args)
     {
         session_destroy();
 
+        // destroy cookie
+        $expires = new \DateTime('-1 hours');
+        setcookie('onsreceptenboek[selector]', "", $expires->getTimestamp(), '/');
+        setcookie('onsreceptenboek[validator]', "", $expires->getTimestamp(), '/');
+
         return $response->withHeader('Location', $this->baseUrl . '/login');
     }
 
-    function restoreCookie()
+    public function restoreCookie()
     {
         // check if cookie exists
         if (!isset($_COOKIE['onsreceptenboek']) || !isset($_COOKIE['onsreceptenboek']['selector']) || !isset($_COOKIE['onsreceptenboek']['validator'])) {
@@ -75,116 +93,35 @@ class User extends Base
         $selectUser->execute(array($authToken['user_id']));
 
         $user = $selectUser->fetch();
-        if (!$user) return false; // no user found
 
-        global $session;
-        $sessionUser = $session->getSegment('Auth');
-        $sessionUser->set('user', $user);
+        if ($user) {
+            unset($user['hash']);
 
-        // update cookie with new validator and expires
-        $validator = random_string(50);
-        $expires = new DateTime('+30 days');
+            $_SESSION['user'] = $user;
 
-        setcookie('onsreceptenboek[selector]', $cookie['selector'], $expires->getTimestamp(), '/');
-        setcookie('onsreceptenboek[validator]', $validator, $expires->getTimestamp(), '/');
+            // update cookie with new validator and expires
+            $validator = $this->random_string(50);
+            $expires = new \DateTime('+30 days');
 
-        $updateToken = $this->db->prepare(
-            "UPDATE auth_tokens SET `validator` = :validator, `expires` = :expires WHERE `selector` = :selector"
-        );
-        $updateToken->execute(array(
-            'selector' => $cookie['selector'],
-            'validator' => password_hash($validator, PASSWORD_DEFAULT),
-            'expires' => $expires->format('Y-m-d H:i:s')
-        ));
+            setcookie('onsreceptenboek[selector]', $cookie['selector'], $expires->getTimestamp(), '/');
+            setcookie('onsreceptenboek[validator]', $validator, $expires->getTimestamp(), '/');
+
+            $updateToken = $this->db->prepare(
+                "UPDATE auth_tokens SET `validator` = :validator, `expires` = :expires WHERE `selector` = :selector"
+            );
+            $updateToken->execute(array(
+                'selector' => $cookie['selector'],
+                'validator' => password_hash($validator, PASSWORD_DEFAULT),
+                'expires' => $expires->format('Y-m-d H:i:s')
+            ));
+        }
 
         return true;
     }
 
-    // TODO: incorporate this method in the old authenticate method
-    public function authenticate2()
-    {
-        $username = $_POST['username'];
-
-        if (!$username) {
-            $errorMsg = 'Geef een gebruikersnaam op.';
-        } else {
-            // get throttling data
-            $remaining_delay = $this->getRemainingDelay($username);
-
-            if ($remaining_delay > 0) {
-                $errorMsg = 'Probeer het over ' . $remaining_delay . ' seconden nogmaals';
-            } else {
-                $user = $this->_authenticate($username, $_POST['password']);
-                if ($user) {
-                    $sessionUser = $this->_session->getSegment('Auth');
-                    $sessionUser->set('user', $user);
-
-                    $this->createCookie($user['id']);
-
-                    if (empty($_POST['return']) ||
-                        $_POST['return'] == $_SERVER['REQUEST_URI']) {
-                        $_POST['return'] = '/';
-                    }
-
-                    header('Location: ' . $_POST['return']);
-                    die();
-                }
-
-                $errorMsg = 'Ongeldige gebruikersnaam / wachtwoord opgegeven, probeer het opnieuw.';
-            }
-        }
-
-        $data = array(
-            'name' => $_POST['username'],
-            'return' => $_POST['return'],
-            'error' => $errorMsg,
-        );
-
-        $this->addCss(array(
-            'css/form.css',
-            'css/login.css',
-        ));
-
-        return $this->render($data, 'login');
-    }
-
-    // TODO: incorporate this method in original logout method
-    public function logout2()
-    {
-        $this->_session->destroy();
-
-        // destroy cookie
-        $expires = new DateTime('-1 hours');
-        setcookie('onsreceptenboek[selector]', "", $expires->getTimestamp(), '/');
-        setcookie('onsreceptenboek[validator]', "", $expires->getTimestamp(), '/');
-
-        header('Location: ' . $this->baseUrl . 'user/login');
-        die();
-    }
-
-    protected function _authenticate($user, $pass)
-    {
-        $select = $this->_db->prepare("SELECT * FROM users WHERE username = :username");
-        $select->execute(array(
-            'username' => $user,
-        ));
-        $result = $select->fetch();
-
-        // verify credentials
-        if ($result) {
-            if (password_verify($pass, $result['password'])) {
-                $this->logLogin($user, 1);
-                return $result;
-            }
-        }
-
-        $this->logLogin($user, 0);
-        return false;
-    }
-
     private function logLogin($user, $result)
     {
-        $log = $this->_db->prepare(
+        $log = $this->db->prepare(
             "INSERT INTO logins 
 				(username, ip_address, attempted, success)
 			VALUES 
@@ -211,14 +148,14 @@ class User extends Base
         $remaining_delay = 0;
 
         // select timestamp of last attempt for this account
-        $select = $this->_db->prepare('SELECT MAX(attempted) AS attempted FROM logins WHERE username = :username');
+        $select = $this->db->prepare('SELECT MAX(attempted) AS attempted FROM logins WHERE username = :username');
         $select->execute(array('username' => $username));
 
         if ($select->rowCount() > 0) {
             $latest_attempt = (int) date('U', strtotime($select->fetchColumn(0)));
 
             // get the global number of failed attempts of last 15 minutes
-            $select = $this->_db->prepare(
+            $select = $this->db->prepare(
                 'SELECT COUNT(1) AS failed 
 				FROM logins 
 				WHERE attempted > DATE_SUB(NOW(), INTERVAL 15 MINUTE) AND 
@@ -246,15 +183,15 @@ class User extends Base
      */
     private function createCookie($id)
     {
-        $selector = $this->random_str(12);
-        $validator = $this->random_str(50);
+        $selector = $this->random_string(12);
+        $validator = $this->random_string(50);
 
-        $expires = new DateTime('+30 days');
+        $expires = new \DateTime('+30 days');
 
         setcookie('onsreceptenboek[selector]', $selector, $expires->getTimestamp(), '/');
         setcookie('onsreceptenboek[validator]', $validator, $expires->getTimestamp(), '/');
 
-        $insert = $this->_db->prepare(
+        $insert = $this->db->prepare(
             "INSERT INTO auth_tokens (
 				`selector`,
 				`validator`,

@@ -74,7 +74,7 @@ abstract class Base
             throw new Exception('$keyspace must be at least two characters long');
         }
         for ($i = 0; $i < $length; ++$i) {
-            $str .= $keyspace[crypto_rand_secure(0, $max)];
+            $str .= $keyspace[$this->crypto_rand_secure(0, $max)];
         }
         return $str;
     }

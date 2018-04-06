@@ -2,7 +2,12 @@
 
 // check if user is logged in, else redirect to login page
 $app->add(function ($request, $response, $next) {
-	$uri = $uri = $request->getUri()->getPath();
+    global $container;
+    $user = new \cookbook\backend\classes\User($container);
+
+	$user->restoreCookie();
+
+    $uri = $uri = $request->getUri()->getPath();
 
 	if (!isset($_SESSION['user']) && strpos($uri, '/achterkant') === 0) {
 		if ($uri != '/achterkant/login') {
