@@ -73,9 +73,7 @@ class User extends Base
     public function restoreCookie()
     {
         $cookieName = $this->ci->get('settings')->get('cookie_name');
-/*        var_dump($cookieName);
-var_dump($_COOKIE[$cookieName]);
-die();*/
+
         // check if cookie exists
         if (!isset($_COOKIE[$cookieName]) || !isset($_COOKIE[$cookieName]['selector']) || !isset($_COOKIE[$cookieName]['validator'])) {
             return false;
@@ -121,8 +119,6 @@ die();*/
                 'expires' => $expires->format('Y-m-d H:i:s')
             ));
         }
-
-        //var_dump($_SESSION);die();
 
         return true;
     }
