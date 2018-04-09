@@ -120,6 +120,8 @@ class User extends Base
             ));
         }
 
+        var_dump($_SESSION);die();
+
         return true;
     }
 
