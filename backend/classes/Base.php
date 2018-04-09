@@ -36,7 +36,7 @@ abstract class Base
     protected function getReturnUri()
     {
         $uri = $this->baseUrl;
-        if ($_SESSION['returnUrl']) {
+        if (isset($_SESSION['returnUrl'])) {
             $returnUrl = str_replace('/achterkant','',$_SESSION['returnUrl']);
 
             $uri .= $returnUrl;
