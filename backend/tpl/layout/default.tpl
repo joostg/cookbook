@@ -64,6 +64,18 @@
 			</div>
 		</nav>
 		{% endblock %}
+        {% if data.flash %}
+			{% for type, flashMessages in data.flash %}
+				{% for flashMessage in flashMessages %}
+				<div class="flashmessage">
+					<div class="ui-state-{% if type == 'alert' %}error{% else %}highlight{% endif %} ui-corner-all">
+						<span class="ui-icon ui-icon-{{ type }}"></span>
+						{{ flashMessage }}
+					</div>
+				</div>
+                {% endfor %}
+			{% endfor %}
+        {% endif %}
 
 		{% block content %}{% endblock %}
 

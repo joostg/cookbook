@@ -4,7 +4,9 @@ class User extends Base
 {
     public function login($request, $response, $args)
     {
-		return $this->render($response, array());
+
+
+        return $this->render($response, array());
     }
 
     public function authenticate($request, $response, $args)
@@ -31,7 +33,11 @@ class User extends Base
 
                 $errorMsg = 'Ongeldige gebruikersnaam / wachtwoord opgegeven, probeer het opnieuw.';
             }
+        } else {
+            $errorMsg = 'Vul iets in.';
         }
+
+        $this->flash->addMessage('alert', $errorMsg);
 
         return $response->withHeader('Location', $this->baseUrl . '/login');
     }

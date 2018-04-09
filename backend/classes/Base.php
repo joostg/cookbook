@@ -5,6 +5,7 @@ abstract class Base
     protected $baseUrl;
     protected $ci;
     protected $db;
+    protected $flash;
     protected $view;
     protected $slugify;
 
@@ -12,6 +13,7 @@ abstract class Base
     {
         $this->ci = $ci;
         $this->db = $this->ci->get('db');
+        $this->flash = $this->ci->get('flash');
         $this->view = $this->ci->get('view');
         $this->slugify = $this->ci->get('slugify');
         $this->baseUrl = $this->ci->get('settings')->get('base_url');
@@ -29,6 +31,8 @@ abstract class Base
         $data['global'] = array(
             'base_url' => $this->baseUrl,
         );
+
+        $data['flash'] = $this->flash->getMessages();
 
         return $this->view->render($response, $template, array('data' => $data));
     }
