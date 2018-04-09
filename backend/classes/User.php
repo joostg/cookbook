@@ -73,7 +73,7 @@ class User extends Base
     public function restoreCookie()
     {
         $cookieName = $this->ci->get('settings')->get('cookie_name');
-
+        var_dump($cookieName);
 var_dump($_COOKIE[$cookieName]);
 die();
         // check if cookie exists
