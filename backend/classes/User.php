@@ -61,21 +61,25 @@ class User extends Base
         session_destroy();
 
         // destroy cookie
+        $cookieName = $this->ci->get('settings')->get('cookie_name');
+
         $expires = new \DateTime('-1 hours');
-        setcookie('onsreceptenboek[selector]', "", $expires->getTimestamp(), '/');
-        setcookie('onsreceptenboek[validator]', "", $expires->getTimestamp(), '/');
+        setcookie($cookieName.'[selector]', "", $expires->getTimestamp(), '/');
+        setcookie($cookieName.'[validator]', "", $expires->getTimestamp(), '/');
 
         return $response->withHeader('Location', $this->baseUrl . '/login');
     }
 
     public function restoreCookie()
     {
+        $cookieName = $this->ci->get('settings')->get('cookie_name');
+
         // check if cookie exists
-        if (!isset($_COOKIE['onsreceptenboek']) || !isset($_COOKIE['onsreceptenboek']['selector']) || !isset($_COOKIE['onsreceptenboek']['validator'])) {
+        if (!isset($_COOKIE[$cookieName]) || !isset($_COOKIE[$cookieName]['selector']) || !isset($_COOKIE[$cookieName]['validator'])) {
             return false;
         }
 
-        foreach ($_COOKIE['onsreceptenboek'] as $name => $value) {
+        foreach ($_COOKIE[$cookieName] as $name => $value) {
             $cookie[htmlspecialchars($name)] = htmlspecialchars($value);
         }
 
@@ -103,8 +107,8 @@ class User extends Base
             $validator = $this->random_string(50);
             $expires = new \DateTime('+30 days');
 
-            setcookie('onsreceptenboek[selector]', $cookie['selector'], $expires->getTimestamp(), '/');
-            setcookie('onsreceptenboek[validator]', $validator, $expires->getTimestamp(), '/');
+            setcookie($cookieName.'[selector]', $cookie['selector'], $expires->getTimestamp(), '/');
+            setcookie($cookieName.'[validator]', $validator, $expires->getTimestamp(), '/');
 
             $updateToken = $this->db->prepare(
                 "UPDATE auth_tokens SET `validator` = :validator, `expires` = :expires WHERE `selector` = :selector"
@@ -183,13 +187,15 @@ class User extends Base
      */
     private function createCookie($id)
     {
+        $cookieName = $this->ci->get('settings')->get('cookie_name');
+
         $selector = $this->random_string(12);
         $validator = $this->random_string(50);
 
         $expires = new \DateTime('+30 days');
 
-        setcookie('onsreceptenboek[selector]', $selector, $expires->getTimestamp(), '/');
-        setcookie('onsreceptenboek[validator]', $validator, $expires->getTimestamp(), '/');
+        setcookie($cookieName.'[selector]', $selector, $expires->getTimestamp(), '/');
+        setcookie($cookieName.'[validator]', $validator, $expires->getTimestamp(), '/');
 
         $insert = $this->db->prepare(
             "INSERT INTO auth_tokens (
