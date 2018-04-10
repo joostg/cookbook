@@ -2,20 +2,22 @@
 
 // check if user is logged in, else redirect to login page
 $app->add(function ($request, $response, $next) {
-    global $container;
-    $user = new \cookbook\backend\classes\User($container);
+    $uri = $request->getUri()->getPath();
 
-	$user->restoreCookie();
+    if (strpos($uri, '/achterkant') === 0) {
+        if (!isset($_SESSION['user'])) {
+            $user = new \cookbook\backend\classes\User($this);
 
-    $uri = $uri = $request->getUri()->getPath();
+            // attempt to restore login from cookie, else redirect to login page
+            if ($user->restoreCookie() !== true) {
+                if ($uri != '/achterkant/login') {
+                    $_SESSION['returnUrl'] = $uri;
 
-	if (!isset($_SESSION['user']) && strpos($uri, '/achterkant') === 0) {
-		if ($uri != '/achterkant/login') {
-			$_SESSION['returnUrl'] = $uri;
-
-			return $response->withHeader('Location', '/achterkant/login');
-		}
-	}
+                    return $response->withHeader('Location', '/achterkant/login');
+                }
+            }
+        }
+    }
 
 	return $next($request, $response);
 });
@@ -23,43 +25,50 @@ $app->add(function ($request, $response, $next) {
 $app->get('/', \cookbook\frontend\classes\Home::class . ':view');
 $app->get('/recept/{path}',  \cookbook\frontend\classes\Recipe::class . ':view');
 
+$app->group('/achterkant', function () {
+    $class = \cookbook\backend\classes\Dashboard::class;
 
-$app->get('/achterkant', \cookbook\backend\classes\Dashboard::class . ':browse');
-$app->get('/achterkant/', \cookbook\backend\classes\Dashboard::class . ':browse');
+    $this->get('',                  $class . ':browse');
+    $this->get('/',                 $class . ':browse');
 
-/* ======================
- * Backend Authentication
- * ====================== */
-$app->get('/achterkant/login', \cookbook\backend\classes\User::class . ':login');
-$app->post('/achterkant/login', \cookbook\backend\classes\User::class . ':authenticate');
-$app->post('/achterkant/restore-cookie', \cookbook\backend\classes\User::class . ':restoreCookie');
-$app->get('/achterkant/logout', \cookbook\backend\classes\User::class . ':logout');
+    $class = \cookbook\backend\classes\User::class;
+    $this->get('/login',            $class . ':login');
+    $this->post('/login',           $class . ':authenticate');
+    $this->get('/restore-cookie',  $class . ':restoreCookie');
+    $this->get('/logout',           $class . ':logout');
 
+    $this->group('/recepten', function () {
+        $class = \cookbook\backend\classes\Recipe::class;
 
-/* ===============
- * Backend Recipes
- * =============== */
-$app->get('/achterkant/recepten', \cookbook\backend\classes\Recipe::class . ':list');
-$app->get('/achterkant/recepten/wijzigen[/{id}]', \cookbook\backend\classes\Recipe::class . ':edit');
-$app->get('/achterkant/recepten/verwijderen[/{id}]', \cookbook\backend\classes\Recipe::class . ':delete');
-$app->post('/achterkant/recepten/opslaan[/{id}]', \cookbook\backend\classes\Recipe::class . ':save');
+        $this->get('',                      $class . ':list');
+        $this->get('/wijzigen[/{id}]',      $class . ':edit');
+        $this->get('/verwijderen[/{id}]',   $class . ':delete');
+        $this->post('/opslaan[/{id}]',      $class . ':save');
+    });
 
-/* ===================
- * Backend Ingredients
- * =================== */
-$app->get('/achterkant/ingredienten', \cookbook\backend\classes\Ingredient::class . ':list');
-$app->get('/achterkant/ingredienten/wijzigen[/{id}]', \cookbook\backend\classes\Ingredient::class . ':edit');
-$app->get('/achterkant/ingredienten/verwijderen[/{id}]', \cookbook\backend\classes\Ingredient::class . ':delete');
-$app->post('/achterkant/ingredienten/opslaan[/{id}]', \cookbook\backend\classes\Ingredient::class . ':save');
+    $this->group('/ingredienten', function () {
+        $class = \cookbook\backend\classes\Ingredient::class;
 
-/* ==================
- * Backend Quantities
- * ================== */
-$app->get('/achterkant/hoeveelheden', \cookbook\backend\classes\Quantity::class .  ':list');
-$app->get('/achterkant/hoeveelheden/wijzigen[/{id}]', \cookbook\backend\classes\Quantity::class .  ':edit');
-$app->get('/achterkant/hoeveelheden/verwijderen[/{id}]', \cookbook\backend\classes\Quantity::class . ':delete');
-$app->post('/achterkant/hoeveelheden/opslaan[/{id}]', \cookbook\backend\classes\Quantity::class . ':save');
+        $this->get('',                      $class . ':list');
+        $this->get('/wijzigen[/{id}]',      $class . ':edit');
+        $this->get('/verwijderen[/{id}]',   $class . ':delete');
+        $this->post('/opslaan[/{id}]',      $class . ':save');
+    });
 
-$app->get('/achterkant/afbeeldingen', \cookbook\backend\classes\ImageViewer::class .  ':browse');
-$app->get('/achterkant/afbeeldingen/verwijderen[/{id}]', \cookbook\backend\classes\ImageViewer::class . ':delete');
-$app->post('/achterkant/afbeeldingen/upload', \cookbook\backend\classes\ImageViewer::class .  ':upload');
+    $this->group('/hoeveelheden', function () {
+        $class = \cookbook\backend\classes\Quantity::class;
+
+        $this->get('',                      $class . ':list');
+        $this->get('/wijzigen[/{id}]',      $class . ':edit');
+        $this->get('/verwijderen[/{id}]',   $class . ':delete');
+        $this->post('/opslaan[/{id}]',      $class . ':save');
+    });
+
+    $this->group('/afbeeldingen', function () {
+        $class = \cookbook\backend\classes\ImageViewer::class;
+
+        $this->get('',                      $class . ':browse');
+        $this->get('/verwijderen[/{id}]',   $class . ':delete');
+        $this->post('/upload',              $class . ':upload');
+    });
+});

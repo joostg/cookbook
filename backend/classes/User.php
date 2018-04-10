@@ -124,9 +124,11 @@ class User extends Base
                 'validator' => password_hash($validator, PASSWORD_DEFAULT),
                 'expires' => $expires->format('Y-m-d H:i:s')
             ));
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     private function logLogin($user, $result)
