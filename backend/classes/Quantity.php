@@ -4,18 +4,18 @@ class Quantity extends Base
 {
 	public function list($request, $response, $args)
 	{
-		$sql = "SELECT
-                    q.*,
-                    u.user AS modifier
-				FROM quantities q
-				LEFT JOIN users u ON u.id = q.modifier
-				ORDER BY name";
-		$stmt = $this->db->prepare($sql);
-		$result = $stmt->execute();
+	    $model = new \model\database\Quantity();
 
-		$data['quantities'] = $stmt->fetchAll();
+        $quantities = $model->get();
 
-		return $this->render($response, $data);
+        foreach ($quantities as $quantity) {
+            $quantityArray = $quantity->toArray();
+            $quantityArray['modifier'] = $quantity->modifiedBy->user;
+
+            $data['quantities'][] = $quantityArray;
+        }
+
+        return $this->render($response, $data);
 	}
 
 	public function edit($request, $response, $args)

@@ -3,6 +3,7 @@ namespace cookbook\backend\classes;
 abstract class Base
 {
     protected $baseUrl;
+    protected $capsule;
     protected $ci;
     protected $db;
     protected $flash;
@@ -12,6 +13,8 @@ abstract class Base
     public function __construct(\Slim\Container $ci)
     {
         $this->ci = $ci;
+
+        $this->capsule = $this->ci->get('capsule');
         $this->db = $this->ci->get('db');
         $this->flash = $this->ci->get('flash');
         $this->view = $this->ci->get('view');

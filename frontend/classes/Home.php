@@ -12,6 +12,15 @@ class Home extends Base
 
     public function recipeList()
     {
+        $model = new \model\database\Quantity();
+
+        $list = $model->take(10)->get();
+        foreach ($list as $recipe) {
+            printr($recipe->name);
+            printr($recipe->modifiedBy->user);
+
+        }
+die();
         $sql = "SELECT
                     r.name,
                     r.intro,

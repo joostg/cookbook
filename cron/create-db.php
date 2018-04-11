@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS ingredients (
             department INT,
             creator INT(10) NOT NULL DEFAULT 0,
 			modifier INT(10) NOT NULL DEFAULT 0,
-			created DATETIME NOT NULL DEFAULT 0,
-			modified DATETIME NOT NULL DEFAULT 0
+			created_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
+			modified_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00'
 		);
 ALTER TABLE ingredients ADD UNIQUE INDEX name (name);
 
@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS quantities (
 			plural VARCHAR(50),
 			creator INT(10) NOT NULL DEFAULT 0,
 			modifier INT(10) NOT NULL DEFAULT 0,
-			created DATETIME NOT NULL DEFAULT 0,
-			modified DATETIME NOT NULL DEFAULT 0
+			created_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
+			modified_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00'
 		);
 ALTER TABLE quantities ADD UNIQUE INDEX name (name);
 
@@ -61,23 +61,34 @@ CREATE TABLE IF NOT EXISTS recipes (
 			description TEXT NOT NULL,
 			creator INT(10) NOT NULL DEFAULT 0,
 			modifier INT(10) NOT NULL DEFAULT 0,
-			created DATETIME NOT NULL DEFAULT 0,
-			modified DATETIME NOT NULL DEFAULT 0
+			created_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
+			modified_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00'
 		);
 ALTER TABLE recipes ADD UNIQUE INDEX path (path);
 
-CREATE TABLE IF NOT EXISTS recipes_ingredients (
-			id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-			recipe_id INT NOT NULL,
-			ingredient_id INT NOT NULL,
-			quantity_id INT,
-			quantity DOUBLE(10,2),
-			`position` INT
-		);
+CREATE TABLE IF NOT EXISTS recipe_ingredientrow (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    recipe_id INT NOT NULL,
+    ingredientrow_id INT NOT NULL,
+    `position` INT,
+    created_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
+    modified_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00'
+);
 
-ALTER TABLE recipes_ingredients ADD INDEX recipe_id (recipe_id);
-ALTER TABLE recipes_ingredients ADD INDEX ingredient_id (ingredient_id);
-ALTER TABLE recipes_ingredients ADD INDEX quantity_id (quantity_id);
+ALTER TABLE recipe_ingredientrow ADD INDEX recipe_id (recipe_id);
+ALTER TABLE recipe_ingredientrow ADD INDEX ingredientrow_id (ingredientrow_id);
+
+CREATE TABLE IF NOT EXISTS ingredientrows (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    ingredient_id INT NOT NULL,
+    quantity_id INT,
+    amount DOUBLE(10,2),
+    created_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
+    modified_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00'
+);
+
+ALTER TABLE ingredientrows ADD INDEX ingredient_id (ingredient_id);
+ALTER TABLE ingredientrows ADD INDEX quantity_id (quantity_id);
 
 CREATE TABLE IF NOT EXISTS images (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -87,6 +98,6 @@ CREATE TABLE IF NOT EXISTS images (
     title VARCHAR(255),
     creator INT(10) NOT NULL DEFAULT 0,
     modifier INT(10) NOT NULL DEFAULT 0,
-    created DATETIME NOT NULL DEFAULT 0,
-    modified DATETIME NOT NULL DEFAULT 0
+    created_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
+    modified_at DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00'
 );

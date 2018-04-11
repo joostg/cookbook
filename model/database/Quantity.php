@@ -1,0 +1,25 @@
+<?php
+
+namespace model\database;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Quantity extends Model
+{
+    protected $table = 'quantities';
+
+    public function ingredientrow()
+    {
+        return $this->hasMany('model\database\Ingredientrow');
+    }
+
+    public function modifiedBy()
+    {
+        return $this->belongsTo('model\database\User','modifier','id');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo('model\database\User','creator','id');
+    }
+}

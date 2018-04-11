@@ -61,6 +61,27 @@ $container['slugify'] = function ($c) {
 	return $slugify;
 };
 
+$container['capsule'] = function ($container) {
+    $capsule = new Illuminate\Database\Capsule\Manager;
+
+    $db = $container['settings']['db'];
+
+    $capsule->addConnection([
+        'driver'    => 'mysql',
+        'host'      => $db['host'],
+        'database'  => $db['dbname'],
+        'username'  => $db['user'],
+        'password'  => $db['pass'],
+        'charset'   => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'prefix'    => '',
+    ]);
+
+    $capsule->bootEloquent();
+
+    return $capsule;
+};
+
 // prepare clean print-function
 function printr($data = '')
 {
