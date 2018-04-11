@@ -22,18 +22,7 @@ class Quantity extends Base
 	{
 		$data = array();
 		if (array_key_exists('id', $args)) {
-			$data['id'] = $args['id'];
-
-			$sql = "SELECT 
-						id,
-						name,
-						plural
-                    FROM quantities
-                    WHERE id = :id";
-			$stmt = $this->db->prepare($sql);
-			$result = $stmt->execute(["id" => $args['id']]);
-
-			$data['quantity'] = $stmt->fetch();
+		    $data['quantity'] = \model\database\Quantity::find($args['id'])->toArray();
 		}
 
 		return $this->render($response, $data);
