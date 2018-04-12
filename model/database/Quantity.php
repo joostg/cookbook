@@ -13,13 +13,13 @@ class Quantity extends Model
         return $this->hasMany('model\database\Ingredientrow');
     }
 
-    public function modifiedBy()
+    public function updatedBy()
     {
-        return $this->belongsTo('model\database\User','modifier','id');
+        return $this->belongsTo('model\database\User','updated_by','id');
     }
 
     public function createdBy()
     {
-        return $this->belongsTo('model\database\User','creator','id');
+        return $this->belongsTo('model\database\User','created_by','id');
     }
 }

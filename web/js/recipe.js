@@ -8,6 +8,10 @@ $('document').ready(function() {
     });
 
     $('.add-ingredient').on('click', function() {
+        var d = new Date();
+        console.log(d.getMinutes().toString()+d.getSeconds().toString()+d.getMilliseconds().toString());return false;
+
+        // TODO: replace array keys with above timestring
         var container = document.createElement("div");
         container.innerHTML = ingredientRow;
         document.getElementById('ingredients').appendChild(container);
@@ -18,42 +22,3 @@ $('document').ready(function() {
         $(this).closest('.ingredient-row').remove();
     });
 });
-
-function createHiddenDiv() {
-    /*$('#description').val($('#editor').html());*/
-
-    var form = document.getElementById("recipe");
-    var i = 1;
-
-    $(".quantity:input").each(function(){
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "ingredient-quantity-" + i;
-        input.value = $(this).val();
-
-        i++;
-        form.appendChild(input);
-    });
-
-    var i = 1;
-    $(".quantity_id").each(function(){
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "ingredient-quantity-id-" + i;
-        input.value = $(this).val();
-
-        i++;
-        form.appendChild(input);
-    });
-
-    var i = 1;
-    $(".ingredient_id").each(function(){
-        var input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "ingredient-ingredient-id-" + i;
-        input.value = $(this).val();
-
-        i++;
-        form.appendChild(input);
-    });
-}

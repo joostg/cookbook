@@ -4,13 +4,15 @@ class Quantity extends Base
 {
 	public function list($request, $response, $args)
 	{
+	    $data = array();
+
 	    $model = new \model\database\Quantity();
 
         $quantities = $model->get();
 
         foreach ($quantities as $quantity) {
             $quantityArray = $quantity->toArray();
-            $quantityArray['modifier'] = $quantity->modifiedBy->user;
+            $quantityArray['updated_by'] = $quantity->updatedBy->user;
 
             $data['quantities'][] = $quantityArray;
         }
@@ -20,9 +22,15 @@ class Quantity extends Base
 
 	public function edit($request, $response, $args)
 	{
-		$data = array();
+        $model = new \model\database\Quantity();
+
+	    $data = array();
 		if (array_key_exists('id', $args)) {
-		    $data['quantity'] = \model\database\Quantity::find($args['id'])->toArray();
+		    $item = $model->find($args['id']);
+
+		    if ($item !== NULL) {
+                $data['quantity'] = $item->toArray();
+            }
 		}
 
 		return $this->render($response, $data);
@@ -56,51 +64,19 @@ class Quantity extends Base
 
 		$user = $_SESSION['user']['id'];
 
-		$plural = NULL;
-		if ($post['plural'] != '') {
-			$plural = $post['plural'];
-		}
+        $quantity = new \model\database\Quantity();
 
-		if ($post['id']) {
-			$id = $post['id'];
+        if ($post['id']) {
+            $quantity = $quantity->firstOrNew(['id' => $post['id']]);
+        } else {
+            $quantity->created_by = $user;
+        }
 
-			$sql = "UPDATE quantities
-					SET 
-						name = :name,
-						plural = :plural,
-						modified = NOW(),
-						modifier = :user_id
-					WHERE id = :id";
-			$stmt = $stmt = $this->db->prepare($sql);
-			$result = $stmt->execute([
-				'name' => $post['name'],
-				'plural' => $plural,
-				'id' => $id,
-                'user_id' => $user,
-			]);
-		} else {
-			$sql = "INSERT INTO quantities (
-						name,
-						plural,
-						created,
-						modified,
-						creator,
-						modifier
-					) VALUES (
-						:name,
-						:plural,
-						NOW(),
-						NOW(),
-						:user_id,
-						:user_id
-					)";
-			$stmt = $stmt = $this->db->prepare($sql);
-			$result = $stmt->execute([
-				'name' => $post['name'],
-				'plural' => $plural,
-                'user_id' => $user,
-			]);
-		}
+        $quantity->name = $post['name'];
+        $quantity->plural = ($post['plural'] != '') ? $post['plural'] : NULL;
+        $quantity->updated_by = $user;
+
+        $quantity->save();
 
 		return $response->withHeader('Location', $this->baseUrl . '/hoeveelheden');
 	}

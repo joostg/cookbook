@@ -41,7 +41,7 @@
                                 </select>
                             </div>
 
-                            <button type="submit" class="btn btn-primary" onclick="createHiddenDiv();">Opslaan</button>
+                            <button type="submit" class="btn btn-primary">Opslaan</button>
                         </div>
 
                         <div class="col-md-6 form-group">
@@ -51,16 +51,18 @@
 
                             <hr>
 
-                            <div id="ingredients">
+                            <fieldset name="ingredients" id="ingredients">
                                 {% if data.ingredients %}
                                     {% for ingredientrow in data.ingredients %}
-                                        <div class="form-row ingredient-row">
+                                        <fieldset>
+                                        <div class="form-row ingredient-row" data-ingredientrow-id="{{ data.ingredientrow.id }}">
                                             <div class="form-group col-xs-1 col-sm-1">
                                                 <i class="fas fa-arrows-alt move-ingredient"></i>
                                             </div>
+
                                             <div class="form-group col-xs-4 col-sm-3">
-                                                <label class="sr-only" for="quantity">Hoeveelheid</label>
-                                                <input type="number" min="0.00" class="form-control quantity" value="{{ ingredientrow.quantity }}">
+                                                <label class="sr-only" for="amount">Hoeveelheid</label>
+                                                <input type="number" min="0.00" class="form-control amount" name="amount" value="{{ ingredientrow.amount }}">
                                             </div>
                                             <div class="form-group col-xs-6 col-sm-3">
                                                 <label class="sr-only" for="quantity_id">Kwantiteit</label>
@@ -90,9 +92,10 @@
                                                 <i class="fas fa-trash-alt delete-ingredient"></i>
                                             </div>
                                         </div>
+                                        </fieldset>
                                     {% endfor %}
                                 {% endif %}
-                            </div>
+                            </fieldset>
                         </div>
                     </div>
                 </form>
@@ -100,17 +103,19 @@
         </div>
     </div>
 
-    {% set ingredientRow %}<div class="form-row ingredient-row">
+    {% set ingredientRow %}
+        <div class="form-row ingredient-row">
+
         <div class="form-group col-xs-1 col-sm-1">
             <i class="fas fa-arrows-alt move-ingredient"></i>
         </div>
         <div class="form-group col-xs-4 col-sm-3">
-            <label class="sr-only" for="quantity">Hoeveelheid</label>
-            <input type="number" min="0.00" class="form-control quantity">
+            <label class="sr-only" for="amount">Hoeveelheid</label>
+            <input type="number" min="0.00" name="ingredient[0][amount]" class="form-control amount">
         </div>
         <div class="form-group col-xs-6 col-sm-3">
             <label class="sr-only" for="quantity_id">Kwantiteit</label>
-            <select class="form-control quantity_id">
+            <select name="ingredient[0][quantity_id]" class="form-control quantity_id">
                 <option value=""></option>
                 {% for quantity in data.quantity_list %}
                     <option value="{{ quantity.id }}">{{ quantity.name }}</option>
@@ -119,7 +124,7 @@
         </div>
         <div class="form-group col-xs-10 col-sm-4">
             <label class="sr-only" for="ingredient_id">Ingrediënt</label>
-            <select class="form-control ingredient_id">
+            <select  name="ingredient[0][ingredient_id]" class="form-control ingredient_id">
                 <option value=""></option>
                 {% for ingredient in data.ingredient_list %}
                     <option value="{{ ingredient.id }}">{{ ingredient.name }}</option>
@@ -129,7 +134,8 @@
         <div class="form-group col-xs-1 col-sm-1">
             <i class="fas fa-trash-alt delete-ingredient"></i>
         </div>
-    </div>{% endset %}
+    </div>
+    {% endset %}
 
     <script type="text/javascript">
         var ingredientRow = '{{ ingredientRow|e('js') }}';

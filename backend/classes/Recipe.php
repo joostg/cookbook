@@ -4,23 +4,40 @@ class Recipe extends Base
 {
 	public function list($request, $response, $args)
 	{
-		$sql = "SELECT 
-					r.*,
-					u.user AS modifier
-				FROM recipes r
-				LEFT JOIN users u ON u.id = r.modifier
-				ORDER BY name";
-		$stmt = $this->db->prepare($sql);
-		$result = $stmt->execute();
-		
-		$data['recipes'] = $stmt->fetchAll();
+        $data = array();
+
+        $model = new \model\database\Recipe();
+
+        $recipes = $model->get();
+
+        foreach ($recipes as $recipe) {
+            $recipeArray = $recipe->toArray();
+            $recipeArray['updated_by'] = $recipe->updatedBy->user;
+
+            $data['recipes'][] = $recipeArray;
+        }
 
 		return $this->render($response, $data);
 	}
 	
 	public function edit($request, $response, $args)
 	{
-		$data = array();
+        $model = new \model\database\Recipe();
+
+        $data = array();
+        if (array_key_exists('id', $args)) {
+            $item = $model->find($args['id']);
+
+            if ($item !== NULL) {
+                $data['recipe'] = $item->toArray();
+
+                $data['ingredients'] = $item->ingredientrow()->get()->toArray();
+
+               // printr($data);die();
+            }
+        }
+
+	    /*$data = array();
 		if (array_key_exists('id', $args)) {
 			$data['id'] = $args['id'];
 			
@@ -35,19 +52,19 @@ class Recipe extends Base
 			$stmt = $this->db->prepare($sql);
 			$result = $stmt->execute(["id" => $args['id']]);
 
-			$data['recipe'] = $stmt->fetch();
+			$data['recipe'] = $stmt->fetch();*/
 
-			$sql = "SELECT 
+			/*$sql = "SELECT
 						quantity,
 						quantity_id,
 						ingredient_id
 					FROM recipes_ingredients
 					WHERE recipe_id = :recipe_id";
 			$stmt = $this->db->prepare($sql);
-			$result = $stmt->execute(["recipe_id" => $args['id']]);
+			$result = $stmt->execute(["recipe_id" => $args['id']]);*/
 
-			$data['ingredients'] = $stmt->fetchAll();
-		}
+			//$data['ingredients'] = array();
+		//}
 
 		$data['quantity_list'] = $this->getQuantityList();
 		$data['ingredient_list'] = $this->getIngredientList();
@@ -84,108 +101,60 @@ class Recipe extends Base
 	public function save($request, $response, $args)
 	{
 		$post = $request->getParsedBody();
+printr($post);die();
+        $user = $_SESSION['user']['id'];
 
-		$path = $this->slugify->slugify($post['name']);
+        $recipe = new \model\database\Recipe();
 
-		if ($post['id']) {
-			$id = $post['id'];
-			$sql = "UPDATE recipes
-					SET 
-						name = :name,
-						path = :path,
-						intro = :intro,
-						description = :description,
-						image = :image
-					WHERE id = :id";
-			$stmt = $stmt = $this->db->prepare($sql);
-			$result = $stmt->execute([
-				'name' => $post['name'],
-				'path' => $path,
-				'intro' => $post['intro'],
-				'description' => $post['description'],
-				'image' => $post['image'],
-				'id' => $id,
-			]);
-		} else {
-			$sql = "INSERT INTO recipes (
-						name,
-						path,
-						intro,
-						description,
-						image,
-						created,
-						creator,
-						modified,
-						modifier
-					) VALUES (
-						:name,
-						:path,
-						:intro,
-						:description,
-						:image,
-						NOW(),
-						1,
-						NOW(),
-						1
-					)";
-			$stmt = $stmt = $this->db->prepare($sql);
-			$result = $stmt->execute([
-				'name' => $post['name'],
-				'path' => $path,
-				'intro' => $post['intro'],
-				'description' => $post['description'],
-				'image' => $post['image'],
-			]);
+        if ($post['id']) {
+            $recipe = $recipe->firstOrNew(['id' => $post['id']]);
+        } else {
+            $recipe->created_by = $user;
+        }
 
-			$id = $this->db->lastInsertId();
-		}
+        $recipe->name = $post['name'];
+        $recipe->path = $this->slugify->slugify($post['name']);;
+        $recipe->intro = $post['intro'];
+        $recipe->description = $post['description'];
+        $recipe->image = $post['image'];
+
+        $recipe->updated_by = $user;
+
+        $recipe->save();
+
 
 		// @TODO: track changes to ingredients so we don't have to delete all rows all the time
-		$sql = "DELETE FROM recipes_ingredients
+		/*$sql = "DELETE FROM recipes_ingredients
 				WHERE recipe_id = :recipe_id";
 		$stmt = $stmt = $this->db->prepare($sql);
 		$result = $stmt->execute([
 			'recipe_id' => $id,
-		]);
+		]);*/
 
-		for ($i = 1; $i; $i++) {
-			if (array_key_exists('ingredient-quantity-' . $i, $post)) {
-				if ($post['ingredient-ingredient-id-' . $i]) {
-					$quantityId = $post['ingredient-quantity-id-' . $i];
-					if ($quantityId == '') {
-						$quantityId = NULL;
-					}
+		for ($i = 1; array_key_exists('ingredient-ingredient-id-' . $i, $post); $i++) {
+		    $ingredientRow = new \model\database\Ingredientrow();
 
-					$quantity = $post['ingredient-quantity-' . $i];
-					if ($quantity == '') {
-						$quantity = NULL;
-					}
+            $amount = $post['ingredient-amount-' . $i];
+            if ($amount != '') {
+                $ingredientRow->amount = $amount;
+            }
 
-					$sql = "INSERT INTO recipes_ingredients (
-								recipe_id,
-								ingredient_id,
-								quantity_id,
-								quantity,
-								position
-							) VALUES (
-								:recipe_id,
-								:ingredient_id,
-								:quantity_id,
-								:quantity,
-								:position
-							)";
-					$stmt = $stmt = $this->db->prepare($sql);
-					$result = $stmt->execute([
-						'recipe_id' => $id,
-						'ingredient_id' => (int) $post['ingredient-ingredient-id-' . $i],
-						'quantity_id' => $quantityId,
-						'quantity' => $quantity,
-						'position' => $i,
-					]);
-				}
-			} else {
-				break;
-			}
+            $ingredientRow->position = $i;
+
+            if ($post['ingredient-ingredient-id-' . $i]) {
+                $ingredient = (new \model\database\Ingredient())->find($post['ingredient-ingredient-id-' . $i]);
+
+                $ingredientRow->ingredient()->associate($ingredient);
+            }
+
+            if ($post['ingredient-quantity-id-' . $i]) {
+                $quantity = (new \model\database\Quantity())->find($post['ingredient-quantity-id-' . $i]);
+
+                $ingredientRow->quantity()->associate($quantity);
+            }
+
+            $ingredientRow->recipe()->associate($recipe);
+            $ingredientRow->save();
 		}
 
 		return $response->withHeader('Location', $this->baseUrl . '/recepten');

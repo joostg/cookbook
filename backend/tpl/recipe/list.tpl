@@ -31,8 +31,8 @@
                        <td>
                            {{ recipe.name }}
                        </td>
-                       <td>{% if recipe.modified %}{{ recipe.modified|date('d-m-Y H:i:s') }}{% endif %}</td>
-                       <td>{{ recipe.modifier }}</td>
+                       <td>{% if recipe.updated_at %}{{ recipe.updated_at|date('d-m-Y H:i:s') }}{% endif %}</td>
+                       <td>{{ recipe.updated_by }}</td>
                        <td>
                            <a href="{{ data.global.base_url }}/recepten/verwijderen/{{ recipe.id }}"
                               onclick="return confirm('Weet je zeker dat je recept `{{ recipe.name }}` wilt verwijderen?')">

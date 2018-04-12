@@ -10,7 +10,7 @@ class Ingredientrow extends Model
 
     public function recipe()
     {
-        return $this->belongsToMany('model\database\Recipe');
+        return $this->belongsTo('model\database\Recipe');
     }
 
     public function ingredient()
