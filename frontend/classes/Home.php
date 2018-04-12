@@ -12,27 +12,8 @@ class Home extends Base
 
     public function recipeList()
     {
-        $model = new \model\database\Quantity();
+        $model = new \model\database\Recipe();
 
-        $list = $model->take(10)->get();
-        foreach ($list as $recipe) {
-            printr($recipe->name);
-            printr($recipe->modifiedBy->user);
-
-        }
-die();
-        $sql = "SELECT
-                    r.name,
-                    r.intro,
-                    r.path,
-                    i.title,
-                    i.path_thumb
-                FROM recipes r 
-                LEFT JOIN `images` i ON i.id = r.image
-                ORDER BY r.name";
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute();
-
-        return $stmt->fetchAll();
+        return $model->orderBy('created_at', 'asc')->take(10)->get()->toArray();
     }
 }
