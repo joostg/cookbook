@@ -18,7 +18,10 @@ class Recipe extends Base
 
                 foreach ($ingredientRows as $ingredientRow) {
                     $ingredientRow->ingredient_name = $ingredientRow->ingredient->name;
-                    $ingredientRow->quantity_name = $ingredientRow->quantity->name;
+
+                    if ($ingredientRow->quantity) {
+                        $ingredientRow->quantity_name = $ingredientRow->quantity->name;
+                    }
 
                     $data['ingredients'][] = $ingredientRow->toArray();
                 }
