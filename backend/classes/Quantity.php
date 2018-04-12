@@ -38,21 +38,17 @@ class Quantity extends Base
 
     public function delete($request, $response, $args)
     {
-        $data = array();
         if (array_key_exists('id', $args)) {
-            $data['id'] = $args['id'];
+            $model = new \model\database\Quantity();
+            $quantity = $model->find( $args['id']);
+            
+            // dissociate from ingredient rwos
+            foreach ($quantity->ingredientrow as $ingredientrow) {
+                $ingredientrow->quantity()->dissociate();
+                $ingredientrow->save();
+            }
 
-            $sql = "DELETE
-                    FROM quantities
-                    WHERE id = :id";
-            $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute(["id" => $args['id']]);
-
-            $sql = "UPDATE recipes_ingredients
-                    SET quantity_id = NULL            
-                    WHERE quantity_id = :id";
-            $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute(["id" => $args['id']]);
+            $quantity->delete();
         }
 
         return $response->withHeader('Location', $this->baseUrl . '/hoeveelheden');
