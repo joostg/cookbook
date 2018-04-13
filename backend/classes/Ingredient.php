@@ -4,58 +4,43 @@ class Ingredient extends Base
 {
 	public function list($request, $response, $args)
 	{
-		$sql = "SELECT 
-					i.*,
-					u.user AS modifier
-				FROM ingredients i
-				LEFT JOIN users u ON u.id = i.modifier
-				ORDER BY name";
-		$stmt = $this->db->prepare($sql);
-		$result = $stmt->execute();
+        $data = array();
 
-		$data['ingredients'] = $stmt->fetchAll();
+        $model = new \model\database\Ingredient();
 
-		return $this->render($response, $data);
+        $ingredients = $model->get();
+
+        foreach ($ingredients as $ingredient) {
+            $ingredientArray = $ingredient->toArray();
+            $ingredientArray['updated_by'] = $ingredient->updatedBy->username;
+
+            $data['ingredients'][] = $ingredientArray;
+        }
+
+        return $this->render($response, $data);
 	}
 
 	public function edit($request, $response, $args)
 	{
-		$data = array();
-		if (array_key_exists('id', $args)) {
-			$data['id'] = $args['id'];
+        $model = new \model\database\Ingredient();
 
-			$sql = "SELECT 
-						id,
-						name,
-						plural
-                    FROM ingredients
-                    WHERE id = :id";
-			$stmt = $this->db->prepare($sql);
-			$result = $stmt->execute(["id" => $args['id']]);
+        $data = array();
+        if (array_key_exists('id', $args)) {
+            $item = $model->find($args['id']);
 
-			$data['ingredient'] = $stmt->fetch();
-		}
+            if ($item !== NULL) {
+                $data['ingredient'] = $item->toArray();
+            }
+        }
 
-		return $this->render($response, $data);
+        return $this->render($response, $data);
 	}
 
     public function delete($request, $response, $args)
     {
-        $data = array();
         if (array_key_exists('id', $args)) {
-            $data['id'] = $args['id'];
-
-            $sql = "DELETE
-                    FROM ingredients
-                    WHERE id = :id";
-            $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute(["id" => $args['id']]);
-
-            $sql = "DELETE
-                    FROM recipes_ingredients
-                    WHERE ingredient_id = :id";
-            $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute(["id" => $args['id']]);
+            $model = new \model\database\Ingredient();
+            $model->find( $args['id'])->delete();
         }
 
         return $response->withHeader('Location', $this->baseUrl . '/ingredienten');
@@ -63,55 +48,23 @@ class Ingredient extends Base
 
 	public function save($request, $response, $args)
 	{
-		$post = $request->getParsedBody();
+        $post = $request->getParsedBody();
 
-        $user = $_SESSION['user']['id'];
+        $user = $this->getLoggedInUserID();
 
-		$plural = NULL;
-		if ($post['plural'] != '') {
-			$plural = $post['plural'];
-		}
+        $ingredient = new \model\database\Ingredient();
 
-		if ($post['id']) {
-			$id = $post['id'];
+        if ($post['id']) {
+            $ingredient = $ingredient->firstOrNew(['id' => $post['id']]);
+        } else {
+            $ingredient->created_by = $user;
+        }
 
-			$sql = "UPDATE ingredients
-					SET 
-						name = :name,
-						plural = :plural,
-						modified = NOW(),
-						modifier = :user_id
-					WHERE id = :id";
-			$stmt = $stmt = $this->db->prepare($sql);
-			$result = $stmt->execute([
-				'name' => $post['name'],
-				'plural' => $plural,
-				'id' => $id,
-                'user_id' => $user,
-			]);
-		} else {
-			$sql = "INSERT INTO ingredients (
-						name,
-						plural,
-						created,
-						modified,
-						creator,
-						modifier
-					) VALUES (
-						:name,
-						:plural,
-						NOW(),
-						NOW(),
-						:user_id,
-						:user_id
-					)";
-			$stmt = $stmt = $this->db->prepare($sql);
-            $result = $stmt->execute([
-                'name' => $post['name'],
-                'plural' => $plural,
-                'user_id' => $user,
-            ]);
-		}
+        $ingredient->name = $post['name'];
+        $ingredient->plural = ($post['plural'] != '') ? $post['plural'] : NULL;
+        $ingredient->updated_by = $user;
+
+        $ingredient->save();
 
 		return $response->withHeader('Location', $this->baseUrl . '/ingredienten');
 	}

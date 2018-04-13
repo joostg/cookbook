@@ -12,4 +12,14 @@ class Ingredient extends Model
     {
         return $this->hasMany('model\database\Ingredientrow');
     }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo('model\database\User','updated_by','id');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo('model\database\User','created_by','id');
+    }
 }

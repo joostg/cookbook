@@ -34,8 +34,8 @@
                        <td>
                            {{ ingredient.plural }}
                        </td>
-                       <td>{% if ingredient.modified %}{{ ingredient.modified|date('d-m-Y H:i:s') }}{% endif %}</td>
-                       <td>{{ ingredient.modifier }}</td>
+                       <td>{% if ingredient.updated_at %}{{ ingredient.updated_at|date('d-m-Y H:i:s') }}{% endif %}</td>
+                       <td>{{ ingredient.updated_by }}</td>
                        <td>
                            <a href="{{ data.global.base_url }}/ingredienten/verwijderen/{{ ingredient.id }}"
                               onclick="return confirm('Weet je zeker dat je ingredient `{{ ingredient.name }}` wilt verwijderen?')">
