@@ -31,7 +31,7 @@ class Ingredientrow extends Model
         $quantityPlural = false;
 
         if ($this->amount !== NULL) {
-            $ingredientArray[] = $this->amount;
+            $ingredientArray[] = round($this->amount,2);
 
             if ($this->amount > 1) {
                 $multipleItems = true;
