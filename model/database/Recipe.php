@@ -10,7 +10,7 @@ class Recipe extends Model
 
     public function image()
     {
-        return $this->hasOne('model\database\Image','image');
+        return $this->belongsTo('model\database\Image');
     }
 
     public function ingredientrow()

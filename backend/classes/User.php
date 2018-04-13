@@ -1,11 +1,11 @@
 <?php
 namespace cookbook\backend\classes;
+use model\database\Auth_token;
+
 class User extends Base
 {
     public function login($request, $response, $args)
     {
-
-
         return $this->render($response, array());
     }
 
@@ -23,10 +23,9 @@ class User extends Base
                 $user = $this->verifyPassword($username, $pass);
 
                 if ($user) {
-                    unset($user['hash']);
-                    $_SESSION['user'] = $user;
+                    $this->saveUserToSession($user);
 
-                    $this->createCookie($user['id']);
+                    $this->createCookie($user);
 
                     return $response->withHeader('Location', $this->getReturnUri());
                 }
@@ -44,17 +43,15 @@ class User extends Base
 
     private function verifyPassword($username, $password)
     {
-        $select = $this->db->prepare("SELECT * FROM users WHERE user = :username");
-        $select->execute(array(
-            'username' => $username,
-        ));
-        $result = $select->fetch();
+        $user = new \model\database\User();
+        $user = $user->where('username',$username)->first();
 
         // verify credentials
-        if ($result) {
-            if (password_verify($password, $result['hash'])) {
-                $this->logLogin($password, 1);
-                return $result;
+        if ($user !== NULL) {
+            if (password_verify($password, $user->password)) {
+                $this->logLogin($username, 1);
+
+                return $user;
             }
         }
 
@@ -89,25 +86,25 @@ class User extends Base
             $cookie[htmlspecialchars($name)] = htmlspecialchars($value);
         }
 
-        // select token from db using selector
-        $selectToken = $this->db->prepare("SELECT validator, user_id FROM auth_tokens	WHERE selector = ? AND expires > NOW()");
-        $selectToken->execute(array($cookie['selector']));
+        $authToken = new \model\database\Auth_token();
+        $authToken = $authToken
+            ->where('selector',$cookie['selector'])
+            ->where('expires','>=',(new \DateTime()))
+            ->first();
 
-        $authToken = $selectToken->fetch();
-        if (!$authToken) return false; // no token found
+        if ($authToken === NULL) {
+            return false;  // no valid token found
+        }
 
-        if (!password_verify($cookie['validator'], $authToken['validator'])) return false; // invalid validator
+        if (!password_verify($cookie['validator'], $authToken['validator'])) {
+            return false; // invalid validator
+        }
 
-        // Valid cookie found. Restore session.
-        $selectUser = $this->db->prepare("SELECT * FROM users WHERE id = ?");
-        $selectUser->execute(array($authToken['user_id']));
-
-        $user = $selectUser->fetch();
+        // get user
+        $user = $authToken->user()->get();
 
         if ($user) {
-            unset($user['hash']);
-
-            $_SESSION['user'] = $user;
+            $this->saveUserToSession($user);
 
             // update cookie with new validator and expires
             $validator = $this->random_string(50);
@@ -116,14 +113,9 @@ class User extends Base
             setcookie($cookieName.'[selector]', $cookie['selector'], $expires->getTimestamp(), '/');
             setcookie($cookieName.'[validator]', $validator, $expires->getTimestamp(), '/');
 
-            $updateToken = $this->db->prepare(
-                "UPDATE auth_tokens SET `validator` = :validator, `expires` = :expires WHERE `selector` = :selector"
-            );
-            $updateToken->execute(array(
-                'selector' => $cookie['selector'],
-                'validator' => password_hash($validator, PASSWORD_DEFAULT),
-                'expires' => $expires->format('Y-m-d H:i:s')
-            ));
+            $authToken->validator = password_hash($validator, PASSWORD_DEFAULT);
+            $authToken->expires  = $expires;
+            $authToken->save();
 
             return true;
         }
@@ -131,20 +123,24 @@ class User extends Base
         return false;
     }
 
-    private function logLogin($user, $result)
+    private function saveUserToSession($user)
     {
-        $log = $this->db->prepare(
-            "INSERT INTO logins 
-				(username, ip_address, attempted, success)
-			VALUES 
-				(:username, INET_ATON(:ip_address), CURRENT_TIMESTAMP, :success)"
-        );
+        $sessionUser = $user->toArray();
+        $sessionUser = $sessionUser[0];
+        unset($sessionUser['password']);
 
-        $log->execute(array(
-            'username' => $user,
-            'ip_address' => $_SERVER['REMOTE_ADDR'],
-            'success' => $result
-        ));
+        $_SESSION['user'] = $sessionUser;
+    }
+
+    private function logLogin($username, $result)
+    {
+        $login = new \model\database\Login();
+        $login->username = $username;
+        $login->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
+        $login->attempted = new \DateTime();
+        $login->success = $result;
+
+        $login->save();
     }
 
     /**
@@ -160,24 +156,18 @@ class User extends Base
         $remaining_delay = 0;
 
         // select timestamp of last attempt for this account
-        $select = $this->db->prepare('SELECT MAX(attempted) AS attempted FROM logins WHERE username = :username');
-        $select->execute(array('username' => $username));
+        $logins = new \model\database\Login();
 
-        if ($select->rowCount() > 0) {
-            $latest_attempt = (int) date('U', strtotime($select->fetchColumn(0)));
+        $latest_attempt = $logins->where('username',$username)->max('attempted');
 
-            // get the global number of failed attempts of last 15 minutes
-            $select = $this->db->prepare(
-                'SELECT COUNT(1) AS failed 
-				FROM logins 
-				WHERE attempted > DATE_SUB(NOW(), INTERVAL 15 MINUTE) AND 
-				success = 0'
-            );
-            $select->execute(array());
+        if ($latest_attempt) {
+            $latest_attempt = (int) date('U', strtotime($latest_attempt));
 
-            if ($select->rowCount() > 0) {
-                $failed_attempts = (int) $select->fetchColumn(0);
+            $failed_attempts = $logins
+                ->where('attempted','>=',new \DateTime('-15 minutes'))
+                ->where('success',0)->count();
 
+            if ($failed_attempts > 0) {
                 // base delay is always 2 seconds, plus a tenth of the failed attempts last 10 minutes
                 $delay = (int)floor($failed_attempts / 10) + 2;
 
@@ -193,7 +183,7 @@ class User extends Base
      * https://paragonie.com/blog/2015/04/secure-authentication-php-with-long-term-persistence#title.2.1
      * @param $id user id to be restored later
      */
-    private function createCookie($id)
+    private function createCookie($user)
     {
         $cookieName = $this->ci->get('settings')->get('cookie_name');
 
@@ -205,24 +195,13 @@ class User extends Base
         setcookie($cookieName.'[selector]', $selector, $expires->getTimestamp(), '/');
         setcookie($cookieName.'[validator]', $validator, $expires->getTimestamp(), '/');
 
-        $insert = $this->db->prepare(
-            "INSERT INTO auth_tokens (
-				`selector`,
-				`validator`,
-				`user_id`,
-				`expires`
-			) VALUES (
-				:selector,
-				:validator,
-				:user_id,
-				:expires				
-			)"
-        );
-        $insert->execute(array(
-            'selector' => $selector,
-            'validator' => password_hash($validator, PASSWORD_DEFAULT),
-            'user_id' => $id,
-            'expires' => $expires->format('Y-m-d H:i:s')
-        ));
+        // save token credentials to database
+        $auth_token = new \model\database\Auth_token();
+        $auth_token->selector = $selector;
+        $auth_token->validator =  password_hash($validator, PASSWORD_DEFAULT);
+        $auth_token->expires = $expires;
+
+        $auth_token->user()->associate($user);
+        $auth_token->save();
     }
 }

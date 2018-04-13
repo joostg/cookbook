@@ -12,7 +12,7 @@ class Quantity extends Base
 
         foreach ($quantities as $quantity) {
             $quantityArray = $quantity->toArray();
-            $quantityArray['updated_by'] = $quantity->updatedBy->user;
+            $quantityArray['updated_by'] = $quantity->updatedBy->username;
 
             $data['quantities'][] = $quantityArray;
         }
@@ -58,7 +58,7 @@ class Quantity extends Base
 	{
 		$post = $request->getParsedBody();
 
-		$user = $_SESSION['user']['id'];
+		$user = $this->getLoggedInUserID();
 
         $quantity = new \model\database\Quantity();
 

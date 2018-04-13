@@ -107,4 +107,9 @@ abstract class Base
         } while ($rnd >= $range);
         return $min + $rnd;
     }
+
+    protected function getLoggedInUserID()
+    {
+        return $_SESSION['user']['id'];
+    }
 }
