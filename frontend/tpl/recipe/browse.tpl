@@ -26,7 +26,7 @@
 				<h3>Ingrediënten</h3>
 				<ul>
 					{% for ingredient in ingredients %}
-						<li>{{ ingredient.amount }} {{ ingredient.quantity_name }} {{ ingredient.ingredient_name }}</li>
+						<li>{{ ingredient }}</li>
 					{% endfor %}
 				</ul>
 					</div>

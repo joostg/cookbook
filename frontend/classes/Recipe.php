@@ -14,16 +14,12 @@ class Recipe extends Base
             if ($item !== NULL) {
                 $data = $item->toArray();
 
+                $data['path_recipe_page'] = $item->image->path_recipe_page;
+
                 $ingredientRows =  $item->ingredientrow()->orderBy('position', 'asc')->get();
 
                 foreach ($ingredientRows as $ingredientRow) {
-                    $ingredientRow->ingredient_name = $ingredientRow->ingredient->name;
-
-                    if ($ingredientRow->quantity) {
-                        $ingredientRow->quantity_name = $ingredientRow->quantity->name;
-                    }
-
-                    $data['ingredients'][] = $ingredientRow->toArray();
+                    $data['ingredients'][] = $ingredientRow->toString();
                 }
             }
         }

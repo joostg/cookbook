@@ -14,6 +14,19 @@ class Home extends Base
     {
         $model = new \model\database\Recipe();
 
-        return $model->orderBy('created_at', 'asc')->take(10)->get()->toArray();
+        $recipes = $model->orderBy('created_at', 'asc')->take(10)->get();
+
+        $return = array();
+        foreach ($recipes as $recipe) {
+            $recipeArray = $recipe->toArray();
+
+            if ($recipe->image !== NULL) {
+                $recipeArray['path_thumb'] = $recipe->image->path_thumb;
+            }
+
+            $return[] = $recipeArray;
+        }
+
+        return $return;
     }
 }

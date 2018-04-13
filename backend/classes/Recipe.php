@@ -12,7 +12,7 @@ class Recipe extends Base
 
         foreach ($recipes as $recipe) {
             $recipeArray = $recipe->toArray();
-            $recipeArray['updated_by'] = $recipe->updatedBy->user;
+            $recipeArray['updated_by'] = $recipe->updatedBy->username;
 
             $data['recipes'][] = $recipeArray;
         }
@@ -81,7 +81,7 @@ class Recipe extends Base
         $recipe->path = $this->slugify->slugify($post['name']);;
         $recipe->intro = $post['intro'];
         $recipe->description = $post['description'];
-        $recipe->image = $post['image'];
+        $recipe->image_id = $post['image'];
 
         $recipe->updated_by = $user;
 
@@ -103,10 +103,7 @@ class Recipe extends Base
                 }
 
                 $ingredientRow->position = $item['position'];
-
-                if ($item['amount'] != '') {
-                    $ingredientRow->amount = $item['amount'];
-                }
+                $ingredientRow->amount =  ($item['amount'] != '') ? $item['amount'] : NULL;
 
                 if ($item['ingredient_id'] != '') {
                     $ingredient = (new \model\database\Ingredient())->find($item['ingredient_id']);
@@ -118,6 +115,8 @@ class Recipe extends Base
                     $quantity = (new \model\database\Quantity())->find($item['quantity_id']);
 
                     $ingredientRow->quantity()->associate($quantity);
+                } else {
+                    $ingredientRow->quantity()->dissociate();
                 }
 
                 $ingredientRow->recipe()->associate($recipe);

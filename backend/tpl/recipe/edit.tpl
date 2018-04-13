@@ -34,7 +34,7 @@
                                     <option value="0"></option>
                                     {% for image in data.image_list %}
                                         <option value="{{ image.id }}"
-                                                {% if data.recipe.image == image.id %}selected="selected"{% endif %}>
+                                                {% if data.recipe.image_id == image.id %}selected="selected"{% endif %}>
                                             {{ image.title }}
                                         </option>
                                     {% endfor %}
@@ -64,7 +64,7 @@
 
                                             <div class="form-group col-xs-4 col-sm-3">
                                                 <label class="sr-only" for="amount">Hoeveelheid</label>
-                                                <input type="number" min="0.00" class="form-control amount" name="ingredient[{{ ingredientrow.id }}][amount]" value="{{ ingredientrow.amount }}">
+                                                <input type="number" min="0" step="0.01" class="form-control amount" name="ingredient[{{ ingredientrow.id }}][amount]" value="{{ ingredientrow.amount }}">
                                             </div>
                                             <div class="form-group col-xs-6 col-sm-3">
                                                 <label class="sr-only" for="quantity_id">Kwantiteit</label>

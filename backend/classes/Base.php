@@ -5,7 +5,6 @@ abstract class Base
     protected $baseUrl;
     protected $capsule;
     protected $ci;
-    protected $db;
     protected $flash;
     protected $view;
     protected $slugify;
@@ -15,7 +14,6 @@ abstract class Base
         $this->ci = $ci;
 
         $this->capsule = $this->ci->get('capsule');
-        $this->db = $this->ci->get('db');
         $this->flash = $this->ci->get('flash');
         $this->view = $this->ci->get('view');
         $this->slugify = $this->ci->get('slugify');

@@ -3,8 +3,8 @@ namespace cookbook\backend\classes;
 class Image
 {
     protected $baseUrl;
+    protected $capsule;
     protected $ci;
-    protected $db;
     protected $slugify;
 
     private $uploadPath;
@@ -18,7 +18,7 @@ class Image
     public function __construct(\Slim\Container $ci)
     {
         $this->ci = $ci;
-        $this->db = $this->ci->get('db');
+        $this->capsule = $this->ci->get('capsule');
         $this->slugify = $this->ci->get('slugify');
         $this->baseUrl = $this->ci->get('settings')->get('base_url');
         $this->uploadPath = $this->ci->get('settings')->get('pictures_path');
@@ -158,41 +158,17 @@ class Image
 
     private function saveToDb($title)
     {
-        $insert = $this->db->prepare(
-            "INSERT INTO images (
-                `path_thumb`,
-                `path_recipe_page`,
-                `extension`,
-                `title`,
-                `created`,
-                `creator`,
-                `modified`,
-                `modifier`
-            ) VALUES (
-                :path_thumb,
-                :path_recipe_page,
-                :extension,
-                :title,
-                NOW(),
-                1,
-                NOW(),
-                1
-            )"
-        );
-        $insert->execute(array(
-            'path_thumb' => $this->pathThumb,
-            'path_recipe_page' => $this->pathRecipePage,
-            'extension' => $this->extension,
-            'title' => $title
-        ));
+        $image = new \model\database\Image();
+        $image->path_thumb = $this->pathThumb;
+        $image->path_recipe_page = $this->pathRecipePage;
+        $image->extension = $this->extension;
+        $image->title = $title;
+        $image->created_by = $_SESSION['user']['id'];
+        $image->updated_by = $_SESSION['user']['id'];
 
-        $errorInfo = $insert->errorInfo();
-        if ( $errorInfo[0] != '00000' ) {
-            $this->errorMessage = $errorInfo[2];
-            return false;
-        }
+        $image->save();
 
-        return $this->db->lastInsertId();
+        return $image->id;
     }
 
     // @deprecated since we use tiny png

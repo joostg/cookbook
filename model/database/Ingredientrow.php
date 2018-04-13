@@ -22,4 +22,47 @@ class Ingredientrow extends Model
     {
         return $this->belongsTo('model\database\Quantity');
     }
+
+    public function toString()
+    {
+        $ingredientArray = array();
+
+        $multipleItems = false;
+        $quantityPlural = false;
+
+        if ($this->amount !== NULL) {
+            $ingredientArray[] = $this->amount;
+
+            if ($this->amount > 1) {
+                $multipleItems = true;
+            }
+        }
+
+        if ($this->quantity !== NULL) {
+            if (!$multipleItems) {
+                $ingredientArray[] = $this->quantity->name;
+            } else {
+                if ($this->quantity->plural !== NULL) {
+                    $quantityPlural = true;
+                    $ingredientArray[] = $this->quantity->plural;
+                } else {
+                    $ingredientArray[] = $this->quantity->name;
+                }
+            }
+        }
+
+        if ($this->ingredient !== NULL) {
+            if (!$multipleItems) {
+                $ingredientArray[] = $this->ingredient->name;
+            } else {
+                if ($this->ingredient->plural !== NULL && !$quantityPlural && $this->quantity === NULL) {
+                    $ingredientArray[] = $this->ingredient->plural;
+                } else {
+                    $ingredientArray[] = $this->ingredient->name;
+                }
+            }
+        }
+
+        return implode(' ', $ingredientArray);
+    }
 }

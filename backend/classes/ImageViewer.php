@@ -4,16 +4,9 @@ class ImageViewer extends Base
 {
     public function browse($request, $response, $args)
     {
-        $sql = "SELECT 
-					id,
-					path_thumb,
-					title
-				FROM images
-				ORDER BY created ASC";
-        $stmt = $this->db->prepare($sql);
-        $result = $stmt->execute();
+        $model = new \model\database\Image();
 
-        $data['images'] = $stmt->fetchAll();
+        $data['images'] = $model->orderBy('created_at','asc')->get()->toArray();
 
         return $this->render($response, $data);
     }
@@ -30,25 +23,17 @@ class ImageViewer extends Base
     public function delete($request, $response, $args)
     {
         if (array_key_exists('id', $args)) {
-            $id = $args['id'];
+            $image = new \model\database\Image();
+            $image = $image->find($args['id']);
 
-            $select = $this->db->prepare(
-                "SELECT path_thumb, path_recipe_page FROM images WHERE id = ?"
-            );
-            $select->execute(array($id));
+            if ($image !== NULL) {
+                $uploadPath = $this->ci->get('settings')->get('pictures_path');
 
-            $imageFiles = $select->fetch();
-            $uploadPath = $this->ci->get('settings')->get('pictures_path');
-
-            foreach ($imageFiles as $imageFile) {
-                $fullPath = $uploadPath . $imageFile;
-                unlink($fullPath);
+                unlink($uploadPath . $image->path_thumb);
+                unlink($uploadPath . $image->path_recipe_page);
             }
 
-            $delete = $this->db->prepare(
-                "DELETE FROM images WHERE id = ?"
-            );
-            $delete->execute(array($id));
+            $image->delete();
         }
 
         return $response->withHeader('Location', $this->baseUrl . '/afbeeldingen');
