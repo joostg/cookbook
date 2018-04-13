@@ -22,11 +22,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="intro">Intro</label>
-                                <textarea class="form-control" id="intro" name="intro" required="required" rows="3">{% if data.recipe.intro %}{{ data.recipe.intro }}{% endif %}</textarea>
+                                <textarea class="form-control" id="intro" name="intro" rows="3">{% if data.recipe.intro %}{{ data.recipe.intro }}{% endif %}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="description">Beschrijving</label>
-                                <textarea  class="form-control" id="description" name="description" required="required" rows="10">{% if data.recipe.description %}{{ data.recipe.description }}{% endif %}</textarea>
+                                <textarea  class="form-control" id="description" name="description" rows="10">{% if data.recipe.description %}{{ data.recipe.description }}{% endif %}</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="image">Afbeelding</label>
