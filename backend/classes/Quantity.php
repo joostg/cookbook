@@ -4,7 +4,7 @@ class Quantity extends Base
 {
 	public function list($request, $response, $args)
 	{
-	    $items = $this->getItems(new \model\database\Quantity());
+	    $data['query'] = $this->_getQueryFilter();
 
         $data['listHeaders'] = array(
             $this->createSortLink('Hoeveelheid', 'name', 'asc'),
@@ -13,11 +13,13 @@ class Quantity extends Base
             $this->createSortLink('Gewijzigd door', 'updated_by'),
         );
 
-        foreach ($items as $quantity) {
-            $quantityArray = $quantity->toArray();
-            $quantityArray['updated_by'] = $quantity->updatedBy->username;
+        $items = $this->getItems(new \model\database\Quantity());
 
-            $data['items'][] = $quantityArray;
+        foreach ($items as $item) {
+            $itemArray = $item->toArray();
+            $itemArray['updated_by'] = $item->updatedBy->username;
+
+            $data['items'][] = $itemArray;
         }
 
         $data['paging'] = $this->paging->getPagingData();

@@ -4,20 +4,26 @@ class Recipe extends Base
 {
 	public function list($request, $response, $args)
 	{
-        $data = array();
+        $data['query'] = $this->_getQueryFilter();
 
-        $model = new \model\database\Recipe();
+        $data['listHeaders'] = array(
+            $this->createSortLink('Recept', 'name', 'asc'),
+            $this->createSortLink('Gewijzigd', 'updated_at'),
+            $this->createSortLink('Gewijzigd door', 'updated_by'),
+        );
 
-        $recipes = $model->get();
+        $items = $this->getItems(new \model\database\Recipe());
 
-        foreach ($recipes as $recipe) {
-            $recipeArray = $recipe->toArray();
-            $recipeArray['updated_by'] = $recipe->updatedBy->username;
+        foreach ($items as $item) {
+            $itemArray = $item->toArray();
+            $itemArray['updated_by'] = $item->updatedBy->username;
 
-            $data['recipes'][] = $recipeArray;
+            $data['items'][] = $itemArray;
         }
 
-		return $this->render($response, $data);
+        $data['paging'] = $this->paging->getPagingData();
+
+        return $this->render($response, $data);
 	}
 	
 	public function edit($request, $response, $args)

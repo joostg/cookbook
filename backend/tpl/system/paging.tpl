@@ -1,4 +1,5 @@
 {% set paging = data.paging %}
+
 <nav aria-label="paginering">
 	<ul class="pagination">
 		{% if (paging.current > 1) and (paging.total > paging.limit) %}

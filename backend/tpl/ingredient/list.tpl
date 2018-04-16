@@ -4,47 +4,63 @@
 
 {% block content %}
     <div class="container theme-showcase" role="main">
-        <div class="col-md-12">
-            <h1>Ingrediënten</h1>
-            <a href="{{ data.global.base_url }}/ingredienten/wijzigen" class="btn btn-default active" >
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ingrediënt toevoegen
-            </a>
+        <div class="row">
+            <div class="col-md-4">
+                <h1 class="mb-4">Ingrediënten</h1>
+            </div>
+            <div class="col-mb-3 offset-md-5">
+                <a href="{{ data.global.base_url }}/ingredienten/wijzigen" class="btn btn-primary" >
+                    <i class="fas fa-plus"></i> Ingrediënt toevoegen
+                </a>
+            </div>
         </div>
 
-        <div class="col-md-12">
-            <table class="table table-striped">
-                <tr>
-                    <th>Wijzigen</th>
-                    <th>Ingrediënt</th>
-                    <th>Meervoud</th>
-                    <th>Gewijzigd</th>
-                    <th>Gewijzigd door</th>
-                    <th>Verwijderen</th>
-                </tr>
-               {% for ingredient in data.ingredients %}
-                   <tr>
-                       <td>
-                           <a href="{{ data.global.base_url }}/ingredienten/wijzigen/{{ ingredient.id }}">
-                                <i class="fas fa-edit "></i>
-                           </a>
-                       </td>
-                       <td>
-                           {{ ingredient.name }}
-                       </td>
-                       <td>
-                           {{ ingredient.plural }}
-                       </td>
-                       <td>{% if ingredient.updated_at %}{{ ingredient.updated_at|date('d-m-Y H:i:s') }}{% endif %}</td>
-                       <td>{{ ingredient.updated_by }}</td>
-                       <td>
-                           <a href="{{ data.global.base_url }}/ingredienten/verwijderen/{{ ingredient.id }}"
-                              onclick="return confirm('Weet je zeker dat je ingredient `{{ ingredient.name }}` wilt verwijderen?')">
-                               <i class="fas fa-trash "></i>
-                           </a>
-                       </td>
-                   </tr>
-               {% endfor %}
-            </table>
+        <form method="get" action="" class="mb-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <input class="form-control" placeholder="Zoekterm" type="search" name="q" id="q" value="{{ data.query }}" />
+                </div>
+                <div class="col-md-2">
+                    <input class="btn btn-secondary" type="submit" id="submit" value="Zoeken" />
+                </div>
+            </div>
+        </form>
+
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Wijzigen</th>
+                        {% include '/backend/tpl/system/listHeaders.tpl' %}
+                        <th>Verwijderen</th>
+                    </tr>
+                   {% for item in data.items %}
+                       <tr>
+                           <td>
+                               <a href="{{ data.global.base_url }}/ingredienten/wijzigen/{{ item.id }}">
+                                    <i class="fas fa-edit "></i>
+                               </a>
+                           </td>
+                           <td>
+                               {{ item.name }}
+                           </td>
+                           <td>
+                               {{ item.plural }}
+                           </td>
+                           <td>{% if item.updated_at %}{{ item.updated_at|date('d-m-Y H:i:s') }}{% endif %}</td>
+                           <td>{{ item.updated_by }}</td>
+                           <td>
+                               <a href="{{ data.global.base_url }}/ingredienten/verwijderen/{{ item.id }}"
+                                  onclick="return confirm('Weet je zeker dat je ingredient `{{ item.name }}` wilt verwijderen?')">
+                                   <i class="fas fa-trash "></i>
+                               </a>
+                           </td>
+                       </tr>
+                   {% endfor %}
+                </table>
+            </div>
         </div>
+
+        {% include '/backend/tpl/system/paging.tpl' %}
     </div>
 {% endblock %}

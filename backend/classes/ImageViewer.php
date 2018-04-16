@@ -8,6 +8,8 @@ class ImageViewer extends Base
 
         $data['images'] = $model->orderBy('created_at','asc')->get()->toArray();
 
+        $data['js'][] = '/js/imageviewer.js';
+
         return $this->render($response, $data);
     }
 

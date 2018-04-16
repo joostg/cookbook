@@ -16,11 +16,11 @@
 
 		<style>
 			body {
-				padding-top: 54px;
+				padding-top: 84px;
 			}
 			@media (min-width: 992px) {
 				body {
-					padding-top: 56px;
+					padding-top: 86px;
 				}
 			}
 

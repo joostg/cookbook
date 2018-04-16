@@ -108,8 +108,8 @@ abstract class Base
         $model = $model->orderBy($queryData['sort'], $queryData['order']);
 
         if (isset($queryData['query'])) {
-            //$model->setQuery($queryData['query']);
-            $model = $model->setQuery($queryData['query']);
+            // TODO: use $model = $model->setQuery($queryData['query']);
+            $model = $model->where('name', $queryData['query']);
         }
         if (isset($queryData['filters']) && !empty($queryData['filters'])) {
             foreach ($queryData['filters'] as $key => $value) {
@@ -235,5 +235,14 @@ abstract class Base
         );
 
         return $link;
+    }
+
+    protected function _getQueryFilter()
+    {
+        if (!$this->qs->isPresent('q')) {
+            return false;
+        }
+
+        return $this->qs->getValue('q');
     }
 }

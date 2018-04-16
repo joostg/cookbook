@@ -4,18 +4,25 @@ class Ingredient extends Base
 {
 	public function list($request, $response, $args)
 	{
-        $data = array();
+        $data['query'] = $this->_getQueryFilter();
 
-        $model = new \model\database\Ingredient();
+	    $data['listHeaders'] = array(
+            $this->createSortLink('Ingrediënt', 'name', 'asc'),
+            $this->createSortLink('Meervoud', 'plural', 'asc'),
+            $this->createSortLink('Gewijzigd', 'updated_at'),
+            $this->createSortLink('Gewijzigd door', 'updated_by'),
+        );
 
-        $ingredients = $model->get();
+        $items = $this->getItems(new \model\database\Ingredient());
 
-        foreach ($ingredients as $ingredient) {
-            $ingredientArray = $ingredient->toArray();
-            $ingredientArray['updated_by'] = $ingredient->updatedBy->username;
+        foreach ($items as $item) {
+            $itemArray = $item->toArray();
+            $itemArray['updated_by'] = $item->updatedBy->username;
 
-            $data['ingredients'][] = $ingredientArray;
+            $data['items'][] = $itemArray;
         }
+
+        $data['paging'] = $this->paging->getPagingData();
 
         return $this->render($response, $data);
 	}

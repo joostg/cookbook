@@ -4,13 +4,31 @@
 
 {% block content %}
     <div class="container theme-showcase" role="main">
-        <div class="col-md-12">
-            <h1>Afbeelingen</h1>
-            <form id="productimg" name="upload" method="POST" enctype="multipart/form-data" action="{{ data.global.base_url }}/afbeeldingen/upload">
-                Afbeelding uploaden: <input type="file" name="image" id="uploadimg" required>
-                Titel <input type="text" name="title" id="title" required>
-                <input type="submit" name="upload" value="upload" id="upload">
-            </form>
+        <div class="row">
+            <div class="col-md-12 mb-4">
+                <h1>Afbeelingen</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <form id="productimg" name="upload" method="POST" enctype="multipart/form-data" action="{{ data.global.base_url }}/afbeeldingen/upload">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Uploaden</span>
+                        </div>
+                        <div class="custom-file">
+                            <input class="custom-file-input" type="file" name="image" id="uploadimg" required>
+                            <label class="custom-file-label" for="uploadimg">Kies een bestand</label>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input class="form-control" type="text" name="title" id="title" placeholder="Afbeeldingstitel" required>
+                            <div class="input-group-append">
+                            <input class="btn btn-secondary" type="submit" name="upload" value="upload" id="upload">
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <div class="row">

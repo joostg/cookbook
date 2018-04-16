@@ -27,4 +27,9 @@ class Recipe extends Model
     {
         return $this->belongsTo('model\database\User','created_by','id');
     }
+
+    public function setQuery($queryString)
+    {
+        return $this->where('name', $queryString);
+    }
 }
