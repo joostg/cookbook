@@ -377,7 +377,7 @@ class queryString
         // default paging values
         $parameters = array(
             'limit' => 25,
-            'sort'  => 'modified_at',
+            'sort'  => 'updated_at',
             'order' => 'DESC',
             'page'  => 1
         );

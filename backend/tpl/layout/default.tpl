@@ -39,23 +39,11 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 					<ul class="navbar-nav ml-auto">
-						<li class="nav-item active">
-							<a class="nav-link" href="/">Home
-								<span class="sr-only">(current)</span>
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ data.global.base_url }}/recepten">Recepten</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ data.global.base_url }}/ingredienten">Ingrediënten</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ data.global.base_url }}/hoeveelheden">Hoeveelheden</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ data.global.base_url }}/afbeeldingen">Afbeeldingen</a>
-						</li>
+						{% for menuItem in data.menu_items %}
+							<li class="nav-item">
+								<a class="nav-link{% if menuItem.active == true %} active{% endif %}" href="{{ data.global.base_url }}{{ menuItem.link }}">{{ menuItem.label }}</a>
+							</li>
+						{% endfor %}
 						<li class="nav-item">
 							<a class="nav-link" href="{{ data.global.base_url }}/logout">Uitloggen</a>
 						</li>

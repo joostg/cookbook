@@ -55,13 +55,57 @@ abstract class Base
 
         $data['flash'] = $this->flash->getMessages();
 
+        $data['menu_items'] = $this->getMenuItems();
+
         return $this->view->render($response, $template, array('data' => $data));
+    }
+
+    protected function getMenuItems()
+    {
+        $data = array(
+            array(
+                'link' => '/',
+                'label' => 'Home',
+            ),
+            array(
+                'link' => '/recepten',
+                'label' => 'Recepten',
+            ),
+            array(
+                'link' => '/ingredienten',
+                'label' => 'Ingrediënten',
+            ),
+            array(
+                'link' => '/hoeveelheden',
+                'label' => 'Hoeveelheden',
+            ),
+            array(
+                'link' => '/afbeeldingen',
+                'label' => 'Afbeeldingen',
+            ),
+        );
+
+        $uri = str_replace('/achterkant', '', $_SERVER['REQUEST_URI']);
+
+        if (strpos($uri, "?")) {
+            $uri = substr($uri, 0, strpos($uri, "?"));
+        }
+
+        foreach ($data as &$menuItem) {
+            if ($uri == $menuItem['link']) {
+                $menuItem['active'] = true;
+            }
+        }
+
+        return $data;
     }
 
     protected function getItems($model)
     {
         // get filters from query string
         $queryData = $this->qs->getQueryData();
+
+        $model = $model->orderBy($queryData['sort'], $queryData['order']);
 
         if (isset($queryData['query'])) {
             //$model->setQuery($queryData['query']);
@@ -158,5 +202,38 @@ abstract class Base
     protected function getLoggedInUserID()
     {
         return $_SESSION['user']['id'];
+    }
+
+    public function createSortLink($label, $field, $defaultOrder = 'desc')
+    {
+        $active = $activeDirection = false;
+        $qs = clone $this->qs;
+
+        if ($qs->getValue('s') == $field) {
+            $active = true;
+
+            if ($qs->getValue('o') == 'desc') {
+                $activeDirection = 'desc';
+                $qs->set('o', 'asc');
+            } else {
+                $activeDirection = 'asc';
+                $qs->set('o', 'desc');
+            }
+        }
+        $qs->set('s', $field);
+
+        if (!$qs->isPresent('o')) {
+            $qs->set('o', $defaultOrder);
+        }
+
+        $link = array(
+            'label' => $label,
+            'field' => $field,
+            'qs' => '?' . $qs->output(),
+            'active' => $active,
+            'activeDirection' => $activeDirection,
+        );
+
+        return $link;
     }
 }

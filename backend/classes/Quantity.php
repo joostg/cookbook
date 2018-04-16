@@ -6,6 +6,13 @@ class Quantity extends Base
 	{
 	    $items = $this->getItems(new \model\database\Quantity());
 
+        $data['listHeaders'] = array(
+            $this->createSortLink('Hoeveelheid', 'name', 'asc'),
+            $this->createSortLink('Meervoud', 'plural', 'asc'),
+            $this->createSortLink('Gewijzigd', 'updated_at'),
+            $this->createSortLink('Gewijzigd door', 'updated_by'),
+        );
+
         foreach ($items as $quantity) {
             $quantityArray = $quantity->toArray();
             $quantityArray['updated_by'] = $quantity->updatedBy->username;
