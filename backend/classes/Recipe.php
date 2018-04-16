@@ -128,7 +128,10 @@ class Recipe extends Base
             // delete deleted ingredient rows
             if (!empty($ingredientIDs)) {
                 $ingredientRow = new \model\database\Ingredientrow();
-                $ingredientRow->whereNotIn('id', $ingredientIDs)->delete();
+                $ingredientRow
+                    ->where('recipe_id', $recipe->id)
+                    ->whereNotIn('id', $ingredientIDs)
+                    ->delete();
             }
         }
 
