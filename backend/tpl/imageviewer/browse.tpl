@@ -32,6 +32,12 @@
         </div>
 
         <div class="row">
+            <div class="col-md-12 mb-4">
+                <h2>Geüploade afbeeldingen</h2>
+            </div>
+        </div>
+
+        <div class="row">
             {% for image in data.images %}
                 <div class="col-md-4">
                     <div class="card mb-4 box-shadow">
