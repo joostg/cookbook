@@ -4,18 +4,16 @@ class Quantity extends Base
 {
 	public function list($request, $response, $args)
 	{
-	    $data = array();
+	    $items = $this->getItems(new \model\database\Quantity());
 
-	    $model = new \model\database\Quantity();
-
-        $quantities = $model->get();
-
-        foreach ($quantities as $quantity) {
+        foreach ($items as $quantity) {
             $quantityArray = $quantity->toArray();
             $quantityArray['updated_by'] = $quantity->updatedBy->username;
 
-            $data['quantities'][] = $quantityArray;
+            $data['items'][] = $quantityArray;
         }
+
+        $data['paging'] = $this->paging->getPagingData();
 
         return $this->render($response, $data);
 	}

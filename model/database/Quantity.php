@@ -22,4 +22,13 @@ class Quantity extends Model
     {
         return $this->belongsTo('model\database\User','created_by','id');
     }
+
+    public function setQuery($queryString)
+    {
+        return $this->where(function ($query) use ($queryString) {
+            $query
+                ->where('name', $queryString)
+                ->orWhere('plural', $queryString);
+        });
+    }
 }

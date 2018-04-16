@@ -21,7 +21,7 @@
                     <th>Gewijzigd door</th>
                     <th>Verwijderen</th>
                 </tr>
-               {% for quantity in data.quantities %}
+               {% for quantity in data.items %}
                    <tr>
                        <td>
                            <a href="{{ data.global.base_url }}/hoeveelheden/wijzigen/{{ quantity.id }}">
@@ -46,5 +46,7 @@
                {% endfor %}
             </table>
         </div>
+
+        {% include '/backend/tpl/system/paging.tpl' %}
     </div>
 {% endblock %}

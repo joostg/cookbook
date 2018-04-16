@@ -1,13 +1,17 @@
 <?php
 namespace cookbook\backend\classes;
+use function MongoDB\BSON\toJSON;
+
 abstract class Base
 {
     protected $baseUrl;
     protected $capsule;
     protected $ci;
     protected $flash;
-    protected $view;
+    protected $qs;
+    protected $paging;
     protected $slugify;
+    protected $view;
 
     public function __construct(\Slim\Container $ci)
     {
@@ -18,6 +22,22 @@ abstract class Base
         $this->view = $this->ci->get('view');
         $this->slugify = $this->ci->get('slugify');
         $this->baseUrl = $this->ci->get('settings')->get('base_url');
+
+        $this->qs = new \cookbook\model\helper\Querystring();
+
+        $this->setPaging();
+    }
+
+    public function setPaging()
+    {
+        $this->paging = new \cookbook\model\helper\Paging($this->qs);
+
+        if ($this->qs->isPresent('p')) {
+            $this->paging->setCurrentPage($this->qs->getValue('p'));
+        }
+        if ($this->qs->isPresent('l')) {
+            $this->paging->setLimit($this->qs->getValue('l'));
+        }
     }
 
     protected function render($response, array $data, $file = null)
@@ -36,6 +56,35 @@ abstract class Base
         $data['flash'] = $this->flash->getMessages();
 
         return $this->view->render($response, $template, array('data' => $data));
+    }
+
+    protected function getItems($model)
+    {
+        // get filters from query string
+        $queryData = $this->qs->getQueryData();
+
+        if (isset($queryData['query'])) {
+            //$model->setQuery($queryData['query']);
+            $model = $model->setQuery($queryData['query']);
+        }
+        if (isset($queryData['filters']) && !empty($queryData['filters'])) {
+            foreach ($queryData['filters'] as $key => $value) {
+                $model = $model->where($key, $value);
+            }
+        }
+
+        $this->paging->setNumResults($model->count());
+
+        $model = $model->offset(($this->paging->getCurrentPage() - 1) * $this->paging->getLimit());
+        $model = $model->limit($this->paging->getLimit());
+
+        return $model->get();
+    }
+
+    protected function _buildLimitStatement()
+    {
+        $start = ($this->_paging->getCurrentPage() - 1) * $this->_paging->getLimit();
+        return 'LIMIT ' . $start . ', ' . $this->_paging->getLimit();
     }
 
     protected function getReturnUri()
