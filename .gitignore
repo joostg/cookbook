@@ -3,4 +3,4 @@
 /config/config.php
 /log/
 composer.lock
-
+/node_modules/

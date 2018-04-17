@@ -26,7 +26,35 @@
                             </div>
                             <div class="form-group">
                                 <label for="description">Beschrijving</label>
-                                <textarea  class="form-control" id="description" name="description" rows="10">{% if data.recipe.description %}{{ data.recipe.description }}{% endif %}</textarea>
+                                <input type="hidden" class="form-control" id="description" name="description" />
+                                <div id="content-container">
+                                    <div id="toolbar-container">
+                                        <span class="ql-formats">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline"></button>
+                                            <button class="ql-strike"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-script" value="sub"></button>
+                                            <button class="ql-script" value="super"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-header" value="2"></button>
+                                            <button class="ql-blockquote"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list" value="ordered"></button>
+                                            <button class="ql-list" value="bullet"></button>
+                                            <button class="ql-indent" value="-1"></button>
+                                            <button class="ql-indent" value="+1"></button>
+                                        </span>
+                                        {#<button class="ql-bold" data-toggle="tooltip" data-placement="bottom" title="Bold"></button>
+                                        <button class="ql-italic" data-toggle="tooltip" data-placement="bottom" title="Add italic text <cmd+i>"></button>#}
+                                    </div>
+                                    <div id="editor-container">{% if data.recipe.description %}{{ data.recipe.description }}{% endif %}</div>
+                                </div>
+
                             </div>
                             <div class="form-group">
                                 <label for="image">Afbeelding</label>

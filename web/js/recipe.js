@@ -27,6 +27,21 @@ $('document').ready(function() {
     $('.delete-ingredient').on('click', function() {
         $(this).closest('.ingredient-row').remove();
     });
+
+    var quill = new Quill('#editor-container', {
+        modules: {
+            toolbar: '#toolbar-container'
+        },
+        placeholder: 'Compose an epic...',
+        theme: 'snow'
+    });
+
+    var form = document.querySelector('form');
+    form.onsubmit = function() {
+        // Populate hidden form on submit
+        var about = document.querySelector('input[name=description]');
+        about.value =  quill.container.firstChild.innerHTML;
+    };
 });
 
 function addSortDataToIngredientrows()

@@ -45,6 +45,10 @@ class Recipe extends Base
 		$data['ingredient_list'] = $this->getIngredientList();
 		$data['image_list'] = $this->getImageList();
 
+		$data['css'][] = '/js/libs/quill/dist/quill.snow.css';
+		$data['css'][] = '/css/recipe.css';
+
+		$data['js'][] = '/js/libs/quill/dist/quill.min.js';
 		$data['js'][] = '/js/libs/sortable-min.js';
 		$data['js'][] = '/js/recipe.js';
 

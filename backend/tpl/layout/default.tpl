@@ -27,6 +27,10 @@
 		</style>
 		<!-- Custom styles for this template -->
 		<link href="/css/recept.css" rel="stylesheet">
+
+        {% if data.css|length %}{% for cssData in data.css %}
+			<link type="text/css" rel="stylesheet" href="{{ cssData }}" />
+		{% endfor %}{% endif %}
 	</head>
 
 	<body role="document">
