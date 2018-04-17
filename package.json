@@ -1,0 +1,23 @@
+{
+  "name": "cookbook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "/web/index.php",
+  "dependencies": {
+    "quill": "^1.3.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joostg/cookbook.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joostg/cookbook/issues"
+  },
+  "homepage": "https://github.com/joostg/cookbook#readme"
+}
