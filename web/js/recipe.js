@@ -32,7 +32,7 @@ $('document').ready(function() {
         modules: {
             toolbar: '#toolbar-container'
         },
-        placeholder: 'Compose an epic...',
+
         theme: 'snow'
     });
 

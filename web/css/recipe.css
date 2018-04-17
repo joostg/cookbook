@@ -2,3 +2,6 @@
     height: 300px;
     overflow-y: scroll;
 }
+#editor-container p {
+    line-height: 2em;
+}
