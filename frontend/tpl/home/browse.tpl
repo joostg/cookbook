@@ -22,7 +22,7 @@
                                 <div class="btn-group">
                                     <a type="button" class="btn btn-sm btn-outline-secondary" href="/recept/{{ recipe.path }}">Bekijken</a>
                                 </div>
-                                <small class="text-muted">{{ recipe.created|date('d-m-Y') }}</small>
+                                <small class="text-muted">{% if recipe.created_at %}{{ recipe.created_at|date('d-m-Y') }}{% endif %}</small>
                             </div>
                         </div>
                     </div>

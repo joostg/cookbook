@@ -14,7 +14,7 @@ class Home extends Base
     {
         $model = new \model\database\Recipe();
 
-        $recipes = $model->orderBy('created_at', 'asc')->take(10)->get();
+        $recipes = $model->orderBy('created_at', 'asc')->get();
 
         $return = array();
         foreach ($recipes as $recipe) {
