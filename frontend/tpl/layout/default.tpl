@@ -26,19 +26,19 @@
 
 <body role="document">
 {% block menu %}
-	<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+	<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="background-color: #e3f2fd;">
 		<div class="container">
-			<a class="navbar-brand" href="/">www.onsreceptenboek.nl</a>
+			<a class="navbar-brand" href="{{ data.global.base_url }}">Onsreceptenboek.nl</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarResponsive">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item active">
-						<a class="nav-link" href="/">Home
-							<span class="sr-only">(current)</span>
-						</a>
-					</li>
+					{% for menuItem in data.menu_items %}
+						<li class="nav-item">
+							<a class="nav-link{% if menuItem.active == true %} active{% endif %}" href="{{ data.global.base_url }}{{ menuItem.link }}">{{ menuItem.label }}</a>
+						</li>
+					{% endfor %}
 				</ul>
 			</div>
 		</div>

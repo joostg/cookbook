@@ -1,5 +1,7 @@
 <?php
+
 namespace cookbook\backend\classes;
+
 class Recipe extends Base
 {
 	public function list($request, $response, $args)
@@ -25,7 +27,7 @@ class Recipe extends Base
 
         return $this->render($response, $data);
 	}
-	
+
 	public function edit($request, $response, $args)
 	{
         $model = new \model\database\Recipe();

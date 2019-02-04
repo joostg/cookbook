@@ -357,7 +357,7 @@ class queryString
         }
 
         // add remaining items, making sure it's not a reserved key
-        $reservedKeys = array('q','f','l','s','o','c','p');
+        $reservedKeys = array('q','f','s','o','c','p');
 
         foreach ($qs as $key => $value) {
             if (in_array($key, $reservedKeys)) {
@@ -376,7 +376,6 @@ class queryString
     {
         // default paging values
         $parameters = array(
-            'limit' => 25,
             'sort'  => 'updated_at',
             'order' => 'DESC',
             'page'  => 1
@@ -387,11 +386,6 @@ class queryString
                 case 'q':
                     if ($value != '') {
                         $parameters['query'] = $value;
-                    }
-                    break;
-                case 'l':
-                    if ($value != '') {
-                        $parameters['limit'] = $value;
                     }
                     break;
                 case 's':

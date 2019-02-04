@@ -7,14 +7,14 @@ class Home extends Base
     {
         $data['recipes'] = $this->recipeList();
 
-        return $this->view->render($response, 'frontend/tpl/home/browse.tpl', $data);
+        return $this->render($response, $data);
     }
 
     public function recipeList()
     {
         $model = new \model\database\Recipe();
 
-        $recipes = $model->orderBy('created_at', 'desc')->get();
+        $recipes = $model->orderBy('created_at', 'desc')->take(3)->get();
 
         $return = array();
         foreach ($recipes as $recipe) {
