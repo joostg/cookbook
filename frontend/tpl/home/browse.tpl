@@ -11,7 +11,7 @@
                         {% if recipe.path_thumb %}
                             <img class="card-img-top" src="/pics/{{ recipe.path_thumb }}" alt="{{ recipe.title }}">
                         {% else %}
-                            <img class="card-img-top" data-src="holder.js/348x261?theme=thumb&bg=55595c&fg=eceeef&text=onsreceptenboek.nl" alt="onsreceptenboek.nl">
+                            {#<img class="card-img-top" data-src="holder.js/348x261?theme=thumb&bg=55595c&fg=eceeef&text=onsreceptenboek.nl" alt="onsreceptenboek.nl">#}
                         {% endif %}
                         <div class="card-body">
                             <h3>{{ recipe.name }}</h3>
