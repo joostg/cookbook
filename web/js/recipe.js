@@ -42,6 +42,13 @@ $('document').ready(function() {
         var about = document.querySelector('input[name=description]');
         about.value =  quill.container.firstChild.innerHTML;
     };
+
+    // fancy selectize input for tags
+    $('#tagsSelect').selectize({
+        persist: false,
+        maxItems: null,
+        create: true,
+    });
 });
 
 function addSortDataToIngredientrows()

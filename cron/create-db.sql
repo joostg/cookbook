@@ -119,3 +119,23 @@ CREATE TABLE IF NOT EXISTS images (
     `created_at` DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
     `updated_at` DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00'
 );
+
+DROP TABLE IF EXISTS `tags`;
+CREATE TABLE IF NOT EXISTS `tags` (
+     `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+     `name` VARCHAR(255) NOT NULL,
+     `path` VARCHAR(255) NOT NULL,
+     `created_by` INT(10) NOT NULL DEFAULT 0,
+     `updated_by` INT(10) NOT NULL DEFAULT 0,
+     `created_at` DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00',
+     `updated_at` DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00'
+);
+ALTER TABLE `tags` ADD UNIQUE INDEX `name` (`name`);
+
+DROP TABLE IF EXISTS `recipe_tag`;
+CREATE TABLE `recipe_tag` (
+    `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `recipe_id` INT NOT NULL,
+    `tag_id` INT NOT NULL
+);
+ALTER TABLE `recipe_tag` ADD UNIQUE INDEX `recipe_tag` (`recipe_id`, `tag_id`);

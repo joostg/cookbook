@@ -23,6 +23,8 @@ class Recipe extends Base
 
         $data['paging'] = $this->paging->getPagingData();
 
+        $data['tag_filter'] = $this->getTagFilter();
+
         return $this->render($response, $data);
     }
 
@@ -45,6 +47,13 @@ class Recipe extends Base
             foreach ($queryData['filters'] as $key => $value) {
                 $model = $model->where($key, $value);
             }
+        }
+
+        $tag = $this->qs->getValue('tag');
+        if ($tag) {
+            $model = $model->whereHas('tag', function($query) use ($tag) {
+                $query->where('path', $tag);
+            });
         }
 
         $this->paging->setNumResults($model->count());
@@ -80,4 +89,19 @@ class Recipe extends Base
 
         return $this->render($response, $data);
 	}
+
+	private function getTagFilter()
+    {
+        $tags = \model\database\Tag::get(['path','name'])->toArray();
+
+        $selected = $this->qs->getValue('tag');
+
+        if ($selected) {
+            $selectedKey = array_search($selected, array_column($tags, 'path'));
+
+            $tags[$selectedKey]['selected'] = true;
+        }
+
+        return $tags;
+    }
 }

@@ -56,6 +56,16 @@
                                 </div>
 
                             </div>
+
+                            <div class="form-group">
+                                <label for="tags">Tags</label>
+                                <select multiple name="tags[]" class="form-control" id="tagsSelect">
+                                    {% for tag in data.tag_list %}
+                                        <option value="tag-id-{{ tag.id }}"{% if tag.id in data.tags %} selected="selected"{% endif %}>{{ tag.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
                             <div class="form-group">
                                 <label for="image">Afbeelding</label>
                                 <select class="form-control image" name="image">

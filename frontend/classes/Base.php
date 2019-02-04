@@ -23,7 +23,7 @@ abstract class Base
         $this->slugify = $this->ci->get('slugify');
         $this->baseUrl = $this->ci->get('settings')->get('base_url_frontend');
 
-        $this->qs = new \cookbook\model\helper\Querystring(null, 9);
+        $this->qs = new \cookbook\model\helper\Querystring(null);
 
         $this->setPaging();
 	}

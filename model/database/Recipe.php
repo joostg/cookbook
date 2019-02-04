@@ -18,6 +18,11 @@ class Recipe extends Model
         return $this->hasMany('model\database\Ingredientrow');
     }
 
+    public function tag()
+    {
+        return $this->belongsToMany('model\database\Tag');
+    }
+
     public function updatedBy()
     {
         return $this->belongsTo('model\database\User','updated_by','id');
