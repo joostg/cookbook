@@ -25,6 +25,8 @@ class Recipe extends Base
 
         $data['tag_filter'] = $this->getTagFilter();
 
+        $data['css'][] = '/css/frontend-recipe-view.css';
+
         return $this->render($response, $data);
     }
 

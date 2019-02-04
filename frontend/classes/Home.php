@@ -7,6 +7,8 @@ class Home extends Base
     {
         $data['recipes'] = $this->recipeList();
 
+        $data['css'][] = '/css/frontend-recipe-view.css';
+
         return $this->render($response, $data);
     }
 

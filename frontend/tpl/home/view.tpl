@@ -7,24 +7,16 @@
         <div class="row">
             {% for recipe in data.recipes %}
                 <div class="col-md-4">
-                    <div class="card mb-4 box-shadow">
-                        {% if recipe.path_thumb %}
-                            <img class="card-img-top" src="{{ data.global.base_url }}/pics/{{ recipe.path_thumb }}" alt="{{ recipe.title }}">
-                        {% else %}
-                            {#<img class="card-img-top" data-src="holder.js/348x261?theme=thumb&bg=55595c&fg=eceeef&text=onsreceptenboek.nl" alt="onsreceptenboek.nl">#}
-                        {% endif %}
-                        <div class="card-body">
-                            <h3>{{ recipe.name }}</h3>
-                            <p class="card-text">
-                                {{ recipe.intro }}
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a type="button" class="btn btn-sm btn-outline-secondary" href="{{ data.global.base_url }}/recepten/{{ recipe.path }}">Bekijken</a>
-                                </div>
-                                <small class="text-muted">{% if recipe.created_at %}{{ recipe.created_at|date('d-m-Y') }}{% endif %}</small>
-                            </div>
-                        </div>
+                    <div class="card mb-4 box-shadow imagebox">
+                        <a href="{{ data.global.base_url }}/recepten/{{ recipe.path }}" title="{{ recipe.name }}">
+                            {% if recipe.path_thumb %}
+                                <img class="card-img-top" class="img-responsive" src="{{ data.global.base_url }}/pics/{{ recipe.path_thumb }}" alt="{{ recipe.title }}">
+                            {% else %}
+                                <img class="card-img-top" class="img-responsive" src="holder.js/348x261?auto=yes&theme=social&text=www.onsreceptenboek.nl" alt="{{ recipe.title }}">
+                            {% endif %}
+
+                            <span class="imagebox-desc">{{ recipe.name }}</span>
+                        </a>
                     </div>
                 </div>
             {% endfor %}
