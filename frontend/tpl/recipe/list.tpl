@@ -29,7 +29,7 @@
 						{% if recipe.path_thumb %}
 							<img class="card-img-top" class="img-responsive" src="{{ data.global.base_url }}/pics/{{ recipe.path_thumb }}" alt="{{ recipe.title }}">
 						{% else %}
-							<img class="card-img-top" class="img-responsive" src="holder.js/348x261?auto=yes&theme=social&text=www.onsreceptenboek.nl" alt="{{ recipe.title }}">
+							<img class="card-img-top" class="img-responsive" src="holder.js/348x261?auto=yes&bg=e3f2fd&fg=292f33&text=www.onsreceptenboek.nl" alt="{{ recipe.title }}">
 						{% endif %}
 
 						<span class="imagebox-desc">{{ recipe.name }}</span>
