@@ -24,20 +24,18 @@
 		<hr>
 
 		<div class="row">
-			<div class="col-md-4 order-md-1">
+			<div class="col-md-4 order-md-1 mb-4">
 				<div class="card mb-6 bg-light box-shadow">
 					<div class="card-header"><h3>Ingrediënten</h3></div>
-
-						<ul class="list-group list-group-flush">
-							{% for ingredient in data.ingredients %}
-								<li class="list-group-item">{{ ingredient }}</li>
-							{% endfor %}
-						</ul>
-
+					<ul class="list-group list-group-flush">
+						{% for ingredient in data.ingredients %}
+							<li class="list-group-item">{{ ingredient }}</li>
+						{% endfor %}
+					</ul>
 				</div>
 			</div>
 
-			<div class="col-md-8 order-md-0">
+			<div class="col-md-8 order-md-0 mb-4">
 				<h3>Bereiding</h3>
                 {{ data.description }}
 			</div>
