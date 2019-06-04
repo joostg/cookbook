@@ -92,11 +92,14 @@ class Recipe extends Base
         $recipe = new \model\database\Recipe();
 
         if ($post['id']) {
+            // id is given, find existing item, or create new item if id is not found
             $recipe = $recipe->firstOrNew(['id' => $post['id']]);
         } else {
+            // recipe is new, fill in creator field
             $recipe->created_by = $user;
         }
 
+        // update recipe itself with new data
         $recipe->name = $post['name'];
         $recipe->path = $this->slugify->slugify($post['name']);;
         $recipe->intro = $post['intro'];
@@ -107,6 +110,7 @@ class Recipe extends Base
 
         $recipe->save();
 
+        // loop through all tags and link them to this recipe.
         $tagList = array();
         if (isset($post['tags'])) {
             foreach ($post['tags'] as $tag) {
@@ -116,9 +120,8 @@ class Recipe extends Base
                 if (strpos($tag, 'tag-id-') === 0) {
                     $tagId = (int) str_replace('tag-id-', '', $tag);
 
-                    // check if found
                     $tagModel = $tagModel->find($tagId);
-                // otherwise create new tag and add tag-id to list of tags
+                // otherwise create new tag and add the id to list of tags
                 } else {
                     $tagModel->name = $tag;
                     $tagModel->path = $this->slugify->slugify($tag);;;
@@ -128,26 +131,27 @@ class Recipe extends Base
                 $tagList[] = $tagModel->id;
             }
 
+            // link tag to this recipe
             $recipe->tag()->sync($tagList);
         }
 
-        // remove orphaned tags to keep things clean
+        // remove orphaned tags
         $orphans = \model\database\Tag::doesntHave('recipe')->get();
 
         foreach ($orphans as $orphan) {
             $orphan->delete();
         }
 
+        // store found ingredient row id's so we can later check which were deleted
         $ingredientIDs = array();
-        if (isset($post['ingredient'])) {
-            // store found ingredient IDs so we can later check which were deleted
-            $ingredientIDs = array();
 
+        if (isset($post['ingredient'])) {
             foreach ($post['ingredient'] as $item) {
                 if ($item['ingredient_id'] == '') {
                     continue;
                 }
 
+                // If the ingredient row already exists, find it. Otherwise create a new ingredient row
                 $ingredientRow = new \model\database\Ingredientrow();
 
                 if (isset($item['id'])) {
@@ -157,12 +161,14 @@ class Recipe extends Base
                 $ingredientRow->position = $item['position'];
                 $ingredientRow->amount =  ($item['amount'] != '') ? $item['amount'] : NULL;
 
+                // associate the ingredient itself
                 if ($item['ingredient_id'] != '') {
                     $ingredient = (new \model\database\Ingredient())->find($item['ingredient_id']);
 
                     $ingredientRow->ingredient()->associate($ingredient);
                 }
 
+                // associate the quantity
                 if ($item['quantity_id'] != '') {
                     $quantity = (new \model\database\Quantity())->find($item['quantity_id']);
 
@@ -187,6 +193,7 @@ class Recipe extends Base
             }
         }
 
+        // no ingredient rows left, delete any that might have been linked to recipe
         if (empty($ingredientIDs)) {
             $ingredientRow = new \model\database\Ingredientrow();
             $ingredientRow
