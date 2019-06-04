@@ -4,9 +4,9 @@ namespace cookbook\backend\classes;
 
 class Quantity extends Base
 {
-	public function list($request, $response, $args)
-	{
-	    $data['query'] = $this->_getQueryFilter();
+    public function list($request, $response, $args)
+    {
+        $data['query'] = $this->_getQueryFilter();
 
         $data['listHeaders'] = array(
             $this->createSortLink('Hoeveelheid', 'name', 'asc'),
@@ -27,23 +27,23 @@ class Quantity extends Base
         $data['paging'] = $this->paging->getPagingData();
 
         return $this->render($response, $data);
-	}
+    }
 
-	public function edit($request, $response, $args)
-	{
+    public function edit($request, $response, $args)
+    {
         $model = new \model\database\Quantity();
 
-	    $data = array();
-		if (array_key_exists('id', $args)) {
-		    $item = $model->find($args['id']);
+        $data = array();
+        if (array_key_exists('id', $args)) {
+            $item = $model->find($args['id']);
 
-		    if ($item !== NULL) {
+            if ($item !== NULL) {
                 $data['quantity'] = $item->toArray();
             }
-		}
+        }
 
-		return $this->render($response, $data);
-	}
+        return $this->render($response, $data);
+    }
 
     public function delete($request, $response, $args)
     {
@@ -63,11 +63,11 @@ class Quantity extends Base
         return $response->withHeader('Location', $this->baseUrl . '/hoeveelheden');
     }
 
-	public function save($request, $response, $args)
-	{
-		$post = $request->getParsedBody();
+    public function save($request, $response, $args)
+    {
+        $post = $request->getParsedBody();
 
-		$user = $this->getLoggedInUserID();
+        $user = $this->getLoggedInUserID();
 
         $quantity = new \model\database\Quantity();
 
@@ -83,6 +83,6 @@ class Quantity extends Base
 
         $quantity->save();
 
-		return $response->withHeader('Location', $this->baseUrl . '/hoeveelheden');
-	}
+        return $response->withHeader('Location', $this->baseUrl . '/hoeveelheden');
+    }
 }

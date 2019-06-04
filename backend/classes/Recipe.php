@@ -4,8 +4,8 @@ namespace cookbook\backend\classes;
 
 class Recipe extends Base
 {
-	public function list($request, $response, $args)
-	{
+    public function list($request, $response, $args)
+    {
         $data['query'] = $this->_getQueryFilter();
 
         $data['listHeaders'] = array(
@@ -26,10 +26,10 @@ class Recipe extends Base
         $data['paging'] = $this->paging->getPagingData();
 
         return $this->render($response, $data);
-	}
+    }
 
-	public function edit($request, $response, $args)
-	{
+    public function edit($request, $response, $args)
+    {
         $model = new \model\database\Recipe();
 
         $data = array();
@@ -48,22 +48,22 @@ class Recipe extends Base
             }
         }
 
-		$data['quantity_list'] = $this->getQuantityList();
-		$data['ingredient_list'] = $this->getIngredientList();
-		$data['image_list'] = $this->getImageList();
-		$data['tag_list'] = $this->getTagList();
+        $data['quantity_list'] = $this->getQuantityList();
+        $data['ingredient_list'] = $this->getIngredientList();
+        $data['image_list'] = $this->getImageList();
+        $data['tag_list'] = $this->getTagList();
 
-		$data['css'][] = '/js/libs/quill/dist/quill.snow.css';
-		$data['css'][] = '/js/libs/selectize.js/css/selectize.bootstrap3.css';
-		$data['css'][] = '/css/recipe.css';
+        $data['css'][] = '/js/libs/quill/dist/quill.snow.css';
+        $data['css'][] = '/js/libs/selectize.js/css/selectize.bootstrap3.css';
+        $data['css'][] = '/css/recipe.css';
 
-		$data['js'][] = '/js/libs/quill/dist/quill.min.js';
-		$data['js'][] = '/js/libs/sortable-min.js';
-		$data['js'][] = '/js/libs/selectize.js/js/standalone/selectize.js';
-		$data['js'][] = '/js/recipe.js';
+        $data['js'][] = '/js/libs/quill/dist/quill.min.js';
+        $data['js'][] = '/js/libs/sortable-min.js';
+        $data['js'][] = '/js/libs/selectize.js/js/standalone/selectize.js';
+        $data['js'][] = '/js/recipe.js';
 
-		return $this->render($response, $data);
-	}
+        return $this->render($response, $data);
+    }
 
     public function delete($request, $response, $args)
     {
@@ -83,9 +83,9 @@ class Recipe extends Base
         return $response->withHeader('Location', $this->baseUrl . '/recepten');
     }
 
-	public function save($request, $response, $args)
-	{
-		$post = $request->getParsedBody();
+    public function save($request, $response, $args)
+    {
+        $post = $request->getParsedBody();
 
         $user = $_SESSION['user']['id'];
 
@@ -139,12 +139,12 @@ class Recipe extends Base
         }
 
         $ingredientIDs = array();
-		if (isset($post['ingredient'])) {
-		    // store found ingredient IDs so we can later check which were deleted
-		    $ingredientIDs = array();
+        if (isset($post['ingredient'])) {
+            // store found ingredient IDs so we can later check which were deleted
+            $ingredientIDs = array();
 
-		    foreach ($post['ingredient'] as $item) {
-		        if ($item['ingredient_id'] == '') {
+            foreach ($post['ingredient'] as $item) {
+                if ($item['ingredient_id'] == '') {
                     continue;
                 }
 
@@ -194,22 +194,22 @@ class Recipe extends Base
                 ->delete();
         }
 
-		return $response->withHeader('Location', $this->baseUrl . '/recepten');
-	}
+        return $response->withHeader('Location', $this->baseUrl . '/recepten');
+    }
 
-	public function getQuantityList()
-	{
+    public function getQuantityList()
+    {
         $quantity = new \model\database\Quantity();
 
         return $quantity->select('id','name')->orderBy('name')->get()->toArray();
-	}
+    }
 
-	public function getIngredientList()
-	{
-		$ingredient = new \model\database\Ingredient();
+    public function getIngredientList()
+    {
+        $ingredient = new \model\database\Ingredient();
 
-		return $ingredient->select('id','name')->orderBy('name')->get()->toArray();
-	}
+        return $ingredient->select('id','name')->orderBy('name')->get()->toArray();
+    }
 
     public function getImageList()
     {
