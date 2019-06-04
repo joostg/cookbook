@@ -194,26 +194,26 @@ abstract class Base
         return $uri;
     }
 
-	/**
-	 * Determines template file to use from calling method name if not explicitly given
-	 *
-	 * @param null $file the template file name to use, if different from calling method name
-	 * @return string the template file name to use
-	 */
-	protected function getTemplateFile($file = null)
-	{
-		if ($file !== null) {
-			return $file;
-		}
+    /**
+     * Determines template file to use from calling method name if not explicitly given
+     *
+     * @param null $file the template file name to use, if different from calling method name
+     * @return string the template file name to use
+     */
+    protected function getTemplateFile($file = null)
+    {
+        if ($file !== null) {
+            return $file;
+        }
 
-		$trace = debug_backtrace(false, 3);
-		array_shift($trace); // removes this method call
-		array_shift($trace); // removes render() method call
-		$caller = array_shift($trace); // gets calling method name
-		$file = $caller['function'];
+        $trace = debug_backtrace(false, 3);
+        array_shift($trace); // removes this method call
+        array_shift($trace); // removes render() method call
+        $caller = array_shift($trace); // gets calling method name
+        $file = $caller['function'];
 
-		return $file;
-	}
+        return $file;
+    }
 
     /**
      * Generate a cryptographic strong random string. Used to generate safe identifiers and validators, for example for

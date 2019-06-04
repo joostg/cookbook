@@ -3,7 +3,6 @@ namespace cookbook\model\helper;
 
 class Paging
 {
-
     /**
      * @var int the currently active page number
      */

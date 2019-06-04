@@ -4,11 +4,11 @@ namespace cookbook\backend\classes;
 
 class Ingredient extends Base
 {
-	public function list($request, $response, $args)
-	{
+    public function list($request, $response, $args)
+    {
         $data['query'] = $this->_getQueryFilter();
 
-	    $data['listHeaders'] = array(
+        $data['listHeaders'] = array(
             $this->createSortLink('Ingrediënt', 'name', 'asc'),
             $this->createSortLink('Meervoud', 'plural', 'asc'),
             $this->createSortLink('Gewijzigd', 'updated_at'),
@@ -27,10 +27,10 @@ class Ingredient extends Base
         $data['paging'] = $this->paging->getPagingData();
 
         return $this->render($response, $data);
-	}
+    }
 
-	public function edit($request, $response, $args)
-	{
+    public function edit($request, $response, $args)
+    {
         $model = new \model\database\Ingredient();
 
         $data = array();
@@ -43,7 +43,7 @@ class Ingredient extends Base
         }
 
         return $this->render($response, $data);
-	}
+    }
 
     public function delete($request, $response, $args)
     {
@@ -55,8 +55,8 @@ class Ingredient extends Base
         return $response->withHeader('Location', $this->baseUrl . '/ingredienten');
     }
 
-	public function save($request, $response, $args)
-	{
+    public function save($request, $response, $args)
+    {
         $post = $request->getParsedBody();
 
         $user = $this->getLoggedInUserID();
@@ -75,6 +75,6 @@ class Ingredient extends Base
 
         $ingredient->save();
 
-		return $response->withHeader('Location', $this->baseUrl . '/ingredienten');
-	}
+        return $response->withHeader('Location', $this->baseUrl . '/ingredienten');
+    }
 }

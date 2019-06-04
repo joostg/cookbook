@@ -8,6 +8,6 @@ class Dashboard extends Base
     {
         $data['user'] = $_SESSION['user']['firstname'] . ' ' .  $_SESSION['user']['name'];
 
-		return $this->render($response, $data);
+        return $this->render($response, $data);
     }
 }

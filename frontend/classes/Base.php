@@ -13,7 +13,7 @@ abstract class Base
     protected $slugify;
     protected $view;
 
-	public function __construct(\Slim\Container $ci)
+    public function __construct(\Slim\Container $ci)
     {
         $this->ci = $ci;
 
@@ -26,7 +26,7 @@ abstract class Base
         $this->qs = new \cookbook\model\helper\Querystring(null);
 
         $this->setPaging();
-	}
+    }
 
     protected function render($response, array $data, $file = null)
     {
