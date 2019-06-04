@@ -1,5 +1,7 @@
 <?php
+
 namespace cookbook\backend\classes;
+
 class Ingredient extends Base
 {
 	public function list($request, $response, $args)

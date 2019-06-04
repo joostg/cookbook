@@ -1,5 +1,7 @@
 <?php
+
 namespace cookbook\backend\classes;
+
 class Dashboard extends Base
 {
     public function browse($request, $response, $args)

@@ -1,16 +1,47 @@
 <?php
+
 namespace cookbook\backend\classes;
-use function MongoDB\BSON\toJSON;
 
 abstract class Base
 {
+    /**
+     * @var string The full URL of the current environment
+     */
     protected $baseUrl;
+
+    /**
+     * @var Illuminate\Database\Capsule\Manager The Eloquent database object
+     */
     protected $capsule;
+
+    /**
+     * @var \Slim\Container The complete dependency container
+     */
     protected $ci;
+
+    /**
+     * @var \Slim\Flash\Messages For displaying flash messages
+     */
     protected $flash;
+
+    /**
+     * @var \cookbook\model\helper\Querystring Object for processing the query string
+     */
     protected $qs;
+
+    /**
+     * @var \cookbook\model\helper\Paging Object for processing paging input
+     */
     protected $paging;
+
+    /**
+     * @var Cocur\Slugify\Slugify Object for slugifying path names
+     */
     protected $slugify;
+
+    /**
+     * @var mixed The Twig template engine
+     */
     protected $view;
 
     public function __construct(\Slim\Container $ci)
@@ -28,18 +59,29 @@ abstract class Base
         $this->setPaging();
     }
 
+    /**
+     * Set paging data based on the query string
+     */
     public function setPaging()
     {
         $this->paging = new \cookbook\model\helper\Paging($this->qs);
 
+        // current page
         if ($this->qs->isPresent('p')) {
             $this->paging->setCurrentPage($this->qs->getValue('p'));
         }
+        // limit items per page
         if ($this->qs->isPresent('l')) {
             $this->paging->setLimit($this->qs->getValue('l'));
         }
     }
 
+    /**
+     * @param $response
+     * @param array $data
+     * @param null $file
+     * @return mixed
+     */
     protected function render($response, array $data, $file = null)
     {
         $file = $this->getTemplateFile($file);
@@ -60,6 +102,10 @@ abstract class Base
         return $this->view->render($response, $template, array('data' => $data));
     }
 
+    /**
+     * TODO: store pages in db instead
+     * @return array
+     */
     protected function getMenuItems()
     {
         $data = array(
@@ -85,6 +131,7 @@ abstract class Base
             ),
         );
 
+        // determine which page is active
         $uri = str_replace('/achterkant', '', $_SERVER['REQUEST_URI']);
 
         if (strpos($uri, "?")) {
@@ -100,6 +147,11 @@ abstract class Base
         return $data;
     }
 
+    /**
+     * Basic method to retrieve list of items from the specified eloquent model.
+     * @param $model
+     * @return mixed
+     */
     protected function getItems($model)
     {
         // get filters from query string
@@ -117,6 +169,7 @@ abstract class Base
             }
         }
 
+        // Create limits based on current page and items per page
         $this->paging->setNumResults($model->count());
 
         $model = $model->offset(($this->paging->getCurrentPage() - 1) * $this->paging->getLimit());
@@ -125,12 +178,10 @@ abstract class Base
         return $model->get();
     }
 
-    protected function _buildLimitStatement()
-    {
-        $start = ($this->_paging->getCurrentPage() - 1) * $this->_paging->getLimit();
-        return 'LIMIT ' . $start . ', ' . $this->_paging->getLimit();
-    }
-
+    /**
+     * Creates return url based on data stored in session
+     * @return string
+     */
     protected function getReturnUri()
     {
         $uri = $this->baseUrl;
@@ -164,6 +215,13 @@ abstract class Base
 		return $file;
 	}
 
+    /**
+     * Generate a cryptographic strong random string. Used to generate safe identifiers and validators, for example for
+     * cookies.
+     * @param $length
+     * @param string $keyspace
+     * @return string
+     */
     protected function random_string($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
     {
         $str = '';
@@ -199,6 +257,9 @@ abstract class Base
         return $min + $rnd;
     }
 
+    /**
+     * @return mixed The database id of the logged in user
+     */
     protected function getLoggedInUserID()
     {
         return $_SESSION['user']['id'];
@@ -237,6 +298,10 @@ abstract class Base
         return $link;
     }
 
+    /**
+     * Returns user query input
+     * @return bool|string
+     */
     protected function _getQueryFilter()
     {
         if (!$this->qs->isPresent('q')) {

@@ -1,5 +1,7 @@
 <?php
+
 namespace cookbook\backend\classes;
+
 class ImageViewer extends Base
 {
     public function browse($request, $response, $args)

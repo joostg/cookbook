@@ -1,5 +1,7 @@
 <?php
+
 namespace cookbook\backend\classes;
+
 class Image
 {
     protected $baseUrl;
@@ -23,11 +25,11 @@ class Image
         $this->baseUrl = $this->ci->get('settings')->get('base_url');
         $this->uploadPath = $this->ci->get('settings')->get('pictures_path');
     }
-    
+
     public function saveRecipeImage($imageFile, $title)
     {
         $this->imageFile = $imageFile;
-        
+
         if ( !$this->validateImage() ) {
             return $this->errorMessage;
         }
@@ -88,14 +90,17 @@ class Image
         // todo: check the file type - but not the one sent by the browser instead use finfo
         /*$finfo = new finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($this->imageFile['files']['tmp_name']);*/
+
         $verifyimg = getimagesize($_FILES['image']['tmp_name']);
         $allowed = array(
             'jpg' => 'image/jpeg',
             'png' => 'image/png',
-            'gif' => 'image/gif');
+            'gif' => 'image/gif'
+        );
+
         $this->extension = array_search($verifyimg['mime'], $allowed, true);
 
-        if ( false === $this->extension ) {
+        if (false === $this->extension) {
             $this->errorMessage = 'Invalid file format.';
             return false;
         }
@@ -107,11 +112,12 @@ class Image
     {
         $path = $this->generateUniquePath();
 
+        // store original file on the server. If successful generate thumbnail and item page image
         if (!move_uploaded_file( $this->imageFile['image']['tmp_name'], $path)) {
             $this->errorMessage = 'Failed to move uploaded file.';
             return false;
         } else {
-            // tinyfy
+            // Use tinyfy API to generate thumbnail and item page images, with optimized compression
             \Tinify\setKey($this->ci->get('settings')['tinypng']['apikey']);
 
             $source = \Tinify\fromFile($path);
@@ -134,6 +140,10 @@ class Image
         }
     }
 
+    /**
+     * Generate a unique filename for the image, which consists of a md5 hash, and is not already in use.
+     * @return string
+     */
     private function generateUniquePath()
     {
         $filenameHash = md5(uniqid($this->imageFile['image']["name"], true));
@@ -143,9 +153,9 @@ class Image
 
         $path = $this->uploadPath . $this->pathRecipePage;
 
-        // check if file doesn't exist yet
+        // check if file already exists, otherwise add digit until it doesn't
         $incr = 0;
-        while(file_exists($path)){
+        while (file_exists($path)) {
             $this->pathThumb = $filenameHash . '_' . $incr . '_thumb.' . $this->extension;
             $this->pathRecipePage  = $filenameHash . '_' . $incr . '.' . $this->extension;
 
@@ -156,6 +166,11 @@ class Image
         return $path;
     }
 
+    /**
+     * Save all required image data to the database
+     * @param $title
+     * @return mixed
+     */
     private function saveToDb($title)
     {
         $image = new \model\database\Image();
@@ -172,8 +187,9 @@ class Image
     }
 
     // @deprecated since we use tiny png
-    function resize_image($file, $save_path, $box_w, $box_h, $crop=FALSE) {
+    function resize_image($file, $save_path, $box_w, $box_h, $crop = false) {
         list($origwidth, $origheight, $source_image_type) = getimagesize($file);
+
         switch ($source_image_type) {
             case IMAGETYPE_GIF:
                 $src = imagecreatefromgif($file);
@@ -190,7 +206,7 @@ class Image
         }
 
         $new = imagecreatetruecolor($box_w, $box_h);
-        if($new === false) {
+        if ($new === false) {
             //creation failed -- probably not enough memory
             return null;
         }
@@ -211,7 +227,7 @@ class Image
         //if the source is smaller than the thumbnail size,
         //don't resize -- add a margin instead
         //(that is, dont magnify images)
-        if($ratio > 1.0)
+        if ($ratio > 1.0)
             $ratio = 1.0;
 
         //compute sizes

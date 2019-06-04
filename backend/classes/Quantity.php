@@ -1,5 +1,7 @@
 <?php
+
 namespace cookbook\backend\classes;
+
 class Quantity extends Base
 {
 	public function list($request, $response, $args)
@@ -48,7 +50,7 @@ class Quantity extends Base
         if (array_key_exists('id', $args)) {
             $model = new \model\database\Quantity();
             $quantity = $model->find( $args['id']);
-            
+
             // dissociate from ingredient rwos
             foreach ($quantity->ingredientrow as $ingredientrow) {
                 $ingredientrow->quantity()->dissociate();
