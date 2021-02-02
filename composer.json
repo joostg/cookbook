@@ -7,6 +7,6 @@
         "cocur/slugify": "^2.2",
         "tinify/tinify": "^1.5",
         "slim/flash": "^0.4.0",
-        "illuminate/database": "^5.6"
+        "illuminate/database": "^6.20"
     }
 }
